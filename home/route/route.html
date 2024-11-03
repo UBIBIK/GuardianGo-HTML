@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Map - Mokpo</title>
+    <link rel="stylesheet" href="route.css">
+</head>
+<body>
+    <div id="map"></div>
+
+    <!-- 마커 컨트롤 패널 -->
+    <div class="marker-panel">
+        <div class="panel-header">
+            <h3>안전/위험 요소</h3>
+            <button class="toggle-panel">
+                <span class="arrow">▼</span>
+            </button>
+        </div>
+        <div class="panel-content">
+            <div class="marker-switch">
+                <label class="switch">
+                    <input type="checkbox" id="marker-cctv">
+                    <span class="slider"></span>
+                </label>
+                <span>CCTV</span>
+            </div>
+            <div class="marker-switch">
+                <label class="switch">
+                    <input type="checkbox" id="marker-fire_fighting">
+                    <span class="slider"></span>
+                </label>
+                <span>소방서</span>
+            </div>
+            <div class="marker-switch">
+                <label class="switch">
+                    <input type="checkbox" id="marker-bell">
+                    <span class="slider"></span>
+                </label>
+                <span>비상벨</span>
+            </div>
+            <div class="marker-switch">
+                <label class="switch">
+                    <input type="checkbox" id="marker-school_zone">
+                    <span class="slider"></span>
+                </label>
+                <span>스쿨존</span>
+            </div>
+            <div class="marker-switch">
+                <label class="switch">
+                    <input type="checkbox" id="marker-convenience">
+                    <span class="slider"></span>
+                </label>
+                <span>편의점</span>
+            </div>
+            <div class="marker-switch">
+                <label class="switch">
+                    <input type="checkbox" id="marker-accidents">
+                    <span class="slider"></span>
+                </label>
+                <span>사고다발지역</span>
+            </div>
+            <div class="marker-switch">
+                <label class="switch">
+                    <input type="checkbox" id="marker-crime">
+                    <span class="slider"></span>
+                </label>
+                <span>범죄자 거주지</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 출발지와 목적지 버튼 -->
+    <div class="controls">
+        <button id="setStart" onclick="selectLocation('start')">출발지 선택</button>
+        <button id="setDestination" onclick="selectLocation('destination')">목적지 선택</button>
+        <button id="findRoute" disabled>길찾기</button>
+    </div>
+
+    <script src="route.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDysXlwPRC7TpH5_UW_-98S_5rnJmfdVAw&callback=initMap" async defer></script>
+</body>
+</html>

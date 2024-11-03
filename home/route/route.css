@@ -1,0 +1,291 @@
+/* 전체적인 테마 색상 변수 정의 */
+:root {
+    --primary-green: #4CAF50;
+    --light-green: #81C784;
+    --dark-green: #388E3C;
+    --hover-green: #66BB6A;
+    --white: #FFFFFF;
+    --gray: #757575;
+    --light-gray: #F5F5F5;
+  }
+  
+  /* 기본 맵 스타일 */
+  #map {
+      height: 100vh;
+      width: 100%;
+      transition: all 0.3s ease;
+  }
+  
+  /* 맵 호버 효과 */
+  #map:hover {
+      box-shadow: 0 0 20px rgba(76, 175, 80, 0.2);
+  }
+  
+  /* 버튼 컨트롤 컨테이너 */
+  .controls {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 5;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+  }
+  
+  .controls:hover {
+      transform: translateX(-50%) translateY(-5px);
+      box-shadow: 0 6px 25px rgba(76, 175, 80, 0.2);
+  }
+  
+  /* 버튼 기본 스타일 */
+  button {
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      min-width: 120px;
+      background-color: var(--light-gray);
+      color: var(--gray);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+  }
+  
+  /* 버튼 호버 효과 */
+  button:not(:disabled):hover {
+      transform: translateY(-2px);
+      background-color: var(--hover-green);
+      color: var(--white);
+      box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+  }
+  
+  /* 버튼 클릭 효과 */
+  button:not(:disabled):active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 10px rgba(76, 175, 80, 0.2);
+  }
+  
+  /* 선택된 버튼 스타일 */
+  button.selected {
+      background-color: var(--primary-green);
+      color: var(--white);
+      animation: pulse 2s infinite;
+  }
+  
+  /* 비활성화된 버튼 */
+  button:disabled {
+      background-color: var(--light-gray);
+      color: var(--gray);
+      cursor: not-allowed;
+      opacity: 0.7;
+  }
+  
+  /* 길찾기 버튼 활성화 스타일 */
+  button#findRoute.active {
+      background-color: var(--dark-green);
+      color: var(--white);
+      animation: fadeInScale 0.5s ease-out;
+  }
+  
+  /* 버튼 펄스 애니메이션 */
+  @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+  }
+  
+  /* 길찾기 버튼 활성화 애니메이션 */
+  @keyframes fadeInScale {
+      0% { 
+          opacity: 0; 
+          transform: scale(0.9); 
+      }
+      50% { 
+          transform: scale(1.1); 
+      }
+      100% { 
+          opacity: 1; 
+          transform: scale(1); 
+      }
+  }
+  
+  /* 툴팁 스타일 */
+  .tooltip {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      color: var(--gray);
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-10px);
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  button:hover .tooltip {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(-5px);
+  }
+
+/* 마커 패널 스타일 */
+.marker-panel {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.panel-header h3 {
+    margin: 0;
+    font-size: 16px;
+    color: var(--gray);
+}
+
+.toggle-panel {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    min-width: auto;
+}
+
+.toggle-panel .arrow {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.marker-panel.collapsed .toggle-panel .arrow {
+    transform: rotate(180deg);
+}
+
+.panel-content {
+    padding: 15px;
+    max-height: 300px;
+    overflow-y: auto;
+    transition: max-height 0.3s ease;
+}
+
+.marker-panel.collapsed .panel-content {
+    display: none;
+}
+
+.marker-panel.collapsed .arrow {
+    transform: rotate(180deg);
+}
+
+/* 스위치 스타일 */
+.marker-switch {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.marker-switch span {
+    margin-left: 10px;
+    color: var(--gray);
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary-green);
+}
+
+input:checked + .slider:before {
+    transform: translateX(17px);
+}
+
+/* 스크롤바 스타일 */
+.panel-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.panel-content::-webkit-scrollbar-track {
+    background: var(--light-gray);
+    border-radius: 3px;
+}
+
+.panel-content::-webkit-scrollbar-thumb {
+    background: var(--gray);
+    border-radius: 3px;
+}
+
+.panel-content::-webkit-scrollbar-thumb:hover {
+    background: var(--dark-green);
+}
+  
+  /* 모바일 최적화 */
+  @media (max-width: 600px) {
+      .controls {
+          bottom: 20px;
+          padding: 10px;
+          gap: 8px;
+      }
+  
+      button {
+          padding: 10px 16px;
+          font-size: 14px;
+          min-width: 90px;
+      }
+  }

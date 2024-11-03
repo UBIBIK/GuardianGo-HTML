@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Street View</title>
+    <style>
+        /* 화면을 꽉 채우도록 스타일 설정 */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        #streetView {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- iframe을 통해 Google Maps의 Street View 표시 -->
+    <iframe
+        id="streetView"
+        src=""
+        allowfullscreen
+        loading="lazy">
+    </iframe>
+
+    <script>
+        // URL에서 latitude, longitude 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const latitude = urlParams.get("lat");
+        const longitude = urlParams.get("lng");
+
+        // Google Maps Embed API의 Street View URL 설정
+        const streetViewUrl = `https://www.google.com/maps/embed?pb=!4v0!6m8!1m7!1sCAoSLEFGMVFpcE1sSW1odTZyMlROOFh4Yk5MN0E3ZlJhVk9fSkJlU3N1REdBY2Jz!2m2!1d${latitude}!2d${longitude}!3f0!4f0!5f0`;
+        
+        // iframe에 URL 적용
+        document.getElementById("streetView").src = streetViewUrl;
+    </script>
+</body>
+</html>

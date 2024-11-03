@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>안전 그룹 관리</title>
+    <link rel="stylesheet" href="group.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>안전 그룹 관리</h1>
+            <div class="user-info">
+                <i class="fas fa-user-circle"></i>
+                <span id="userName"></span>
+            </div>
+        </div>
+
+        <div class="content">
+            <div id="loadingSpinner" class="loading-spinner">
+                <div class="spinner"></div>
+            </div>
+
+            <div id="groupInfo" class="group-info hidden">
+                <div class="group-header">
+                    <h2>그룹 정보</h2>
+                    <span class="group-key"></span>
+                    <button id="deleteGroupBtn" class="btn delete">그룹 삭제</button>
+                </div>
+                <div class="group-details">
+                    <div class="detail-item">
+                        <i class="fas fa-users"></i>
+                        <span class="group-name"></span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-crown"></i>
+                        <span class="group-master"></span>
+                    </div>
+                </div>
+                <div class="members-list">
+                    <h3>그룹 멤버</h3>
+                    <div class="members-container"></div>
+                </div>
+            </div>
+
+            <div id="noGroup" class="no-group hidden">
+                <div class="empty-state">
+                    <i class="fas fa-users-slash"></i>
+                    <h2>참여 중인 그룹이 없습니다</h2>
+                    <p>새로운 그룹을 만들거나 기존 그룹에 참여해보세요</p>
+                </div>
+                <div class="button-container">
+                    <button id="createGroupBtn" class="btn create">
+                        <i class="fas fa-plus"></i>
+                        그룹 만들기
+                    </button>
+                    <button id="joinGroupBtn" class="btn join">
+                        <i class="fas fa-sign-in-alt"></i>
+                        그룹 참여하기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 모달 -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="modalTitle"></h2>
+            <form id="modalForm">
+                <div class="input-group">
+                    <label for="groupInput"></label>
+                    <input type="text" id="groupInput" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn cancel" id="modalCancelBtn">취소</button>
+                    <button type="submit" class="btn confirm">확인</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="group.js"></script>
+</body>
+</html>

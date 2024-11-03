@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Map</title>
+    <link rel="stylesheet" href="home.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDysXlwPRC7TpH5_UW_-98S_5rnJmfdVAw"></script>
+</head>
+<body>
+    <div id="map"></div>
+
+    <!-- 그룹원 정보 모달 -->
+    <div id="infoModal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="modalUserName"></h2>
+            <p id="modalLocationInfo"></p>
+            <div class="modal-buttons">
+                <button id="closeModalBtn">닫기</button>
+                <button id="streetViewBtn">스트리트뷰</button>
+                <button id="routeBtn">경로 설정</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../locationUpdater.js"></script>
+    <script src="home.js"></script>
+</body>
+</html>
