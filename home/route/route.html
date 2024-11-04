@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Map - Mokpo</title>
     <link rel="stylesheet" href="route.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=Qo2Dzd0MGI2AyknkLTB8U6jqfAz5UwUA3gaqwxjj"></script>
 </head>
 <body>
     <div id="map"></div>
@@ -67,6 +69,13 @@
                 </label>
                 <span>범죄자 거주지</span>
             </div>
+            <div class="marker-switch">
+                <label class="switch">
+                    <input type="checkbox" id="marker-report">
+                    <span class="slider"></span>
+                </label>
+                <span>사용자 신고</span>
+            </div>
         </div>
     </div>
 
@@ -75,6 +84,25 @@
         <button id="setStart" onclick="selectLocation('start')">출발지 선택</button>
         <button id="setDestination" onclick="selectLocation('destination')">목적지 선택</button>
         <button id="findRoute" disabled>길찾기</button>
+    </div>
+
+    <!-- 길찾기 이후 버튼 -->
+    <div class="route-controls" style="display: none;">
+        <button id="backToStart">
+            <i class="arrow-left"></i>뒤로가기
+        </button>
+        <button id="safeRoute">안전 경로</button>
+        <button id="shortestRoute">최단 경로</button>
+        <button id="editRoute">경로 편집</button>
+        <button id="saveRoute">경로 저장</button>
+    </div>
+
+    <!-- 모달 알림창 (새 코드 생성) -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span id="close-modal" class="close">&times;</span>
+            <p>경유지는 최대 5개까지 설정할 수 있습니다.</p>
+        </div>
     </div>
 
     <script src="route.js"></script>

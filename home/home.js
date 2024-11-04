@@ -127,6 +127,7 @@ function openStreetView(memberData) {
     window.location.href = `streetview.html?lat=${latitude}&lng=${longitude}`;
 }
 
+// route창을 열면서 멤버의 이름, 위치 전달
 function openRoutePage(memberData) {
     const { groupMemberName, latitude, longitude } = memberData;
     const url = `route/route.html?name=${encodeURIComponent(groupMemberName)}&lat=${latitude}&lng=${longitude}`;

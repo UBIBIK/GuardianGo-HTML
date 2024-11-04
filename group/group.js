@@ -1,9 +1,12 @@
+// const BASE_URL = 'http://localhost:8080';
+
+const BASE_URL = '/api'
+
 document.addEventListener('DOMContentLoaded', async () => {
     // 전역 변수
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
     let groupInfo = JSON.parse(sessionStorage.getItem('groupInfo'));
-    const BASE_URL = 'http://localhost:8080';
-    // const BASE_URL = 'http://34.64.214.135:8080';
+
 
     // DOM 요소
     const loadingSpinner = document.getElementById('loadingSpinner');

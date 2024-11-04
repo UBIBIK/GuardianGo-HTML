@@ -2,9 +2,9 @@ $('.message a').click(function(){
     $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
  });
 
- const BASE_URL = window.location.hostname === "localhost" 
- ? 'http://localhost:8080' // 로컬 개발 환경
- : '/api'; // Netlify 배포 환경
+// const BASE_URL = 'http://localhost:8080';
+
+const BASE_URL = '/api'
 
  async function register() {
     const name = document.getElementById('name').value.trim();

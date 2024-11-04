@@ -1,8 +1,9 @@
 // locationUpdater.js
 
 // 서버 URL 및 주기적인 위치 업데이트 간격 설정 (10000ms = 10초)
-// const BASE_URL = 'http://34.64.214.135:8080';
-const BASE_URL = 'http://localhost:8080/save-location';
+// const BASE_URL = 'http://localhost:8080';
+
+const BASE_URL = '/api'
 const UPDATE_INTERVAL = 10000; // 10초마다 위치 업데이트
 
 // 위치 정보를 서버에 전송하는 함수
@@ -27,7 +28,7 @@ async function sendLocationToServer(latitude, longitude) {
 
         console.log(`전송할 위치 정보 - 위도: ${latitude}, 경도: ${longitude}`); // 위치 정보 로그
 
-        const response = await fetch(BASE_URL, {
+        const response = await fetch(`${BASE_URL}/save-location`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -12,20 +12,20 @@
     <div class="login-page">
         <div class="form">
             <form class="register-form">
-                <input type="text" id="name" placeholder="name" required/>
-                <input type="text" id="email" placeholder="email address" required/>
-                <input type="password" id="password" placeholder="password" required/>
-                <input type="password" id="confirm-password" placeholder="confirm password" required/>
-                <input type="tel" id="phone" placeholder="phone number" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required/>
-                <button type="button" onclick="register()">create</button>
-                <p class="message">Already registered? <a href="#">Sign In</a></p>
+                <input type="text" id="name" placeholder="이름" required/>
+                <input type="text" id="email" placeholder="이메일" required/>
+                <input type="password" id="password" placeholder="비밀번호" required/>
+                <input type="password" id="confirm-password" placeholder="비밀번호 확인" required/>
+                <input type="tel" id="phone" placeholder="전화번호" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required/>
+                <button type="button" onclick="register()">회원가입</button>
+                <p class="message">계정이 이미 있다면? <a href="#">로그인</a></p>
             </form>
             
             <form class="login-form">
-                <input type="text" id="username" placeholder="username" required/>
-                <input type="password" id="login-password" placeholder="password" required/>
-                <button type="button" onclick="login()">login</button>
-                <p class="message">Not registered? <a href="#">Create an account</a></p>
+                <input type="text" id="username" placeholder="이메일" required/>
+                <input type="password" id="login-password" placeholder="비밀번호" required/>
+                <button type="button" onclick="login()">로그인</button>
+                <p class="message">저희 서비스가 처음인가요? <a href="#">회원가입</a></p>
             </form>
             
         </div>

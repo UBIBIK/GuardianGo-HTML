@@ -1,13 +1,20 @@
 let map, startMarker, destinationMarker;
 let startSelected = false;
 let destinationSelected = false;
-
+// 경로 편집 모드 토글 상태를 추적할 변수
+let isEditMode = false;
+// 경유지 관리 배열
+let waypointMarkers = [];
 const fileMapping = {
     bell: 'emergency_bell',
     // 필요시 추가 파일 매핑
 };
-
 let markerIcons;
+
+// 경로 저장 버튼 참조 및 초기 비활성화
+const saveRouteButton = document.getElementById("saveRoute");
+saveRouteButton.disabled = true; // 초기 상태는 비활성화
+saveRouteButton.classList.remove("active"); // 비활성화 시 스타일 제거
 
 function initMap() {
     const mokpo = { lat: 34.8118, lng: 126.3922 };
@@ -51,10 +58,29 @@ document.addEventListener("DOMContentLoaded", () => {
     // findRoute 버튼 이벤트 리스너
     const findRouteButton = document.getElementById("findRoute");
     findRouteButton.onclick = function() {
-        if (startMarker && destinationMarker) {
-            calculateRoute(startMarker.getPosition(), destinationMarker.getPosition());
-        }
+        switchToRoutePanel(); // 버튼 클릭 시 바로 패널 전환
     };
+
+    // 길찾기 패널 버튼 이벤트 리스너
+    const backButton = document.getElementById("backToStart");
+    const safeRouteButton = document.getElementById("safeRoute");
+    const shortestRouteButton = document.getElementById("shortestRoute");
+    const editRouteButton = document.getElementById("editRoute");
+    backButton.addEventListener("click", () => {
+        resetRouteButtons();
+        backToInitialPanel();
+    });
+    safeRouteButton.addEventListener("click", () => {
+        resetRouteButtons();
+        findSafeRoute();
+    });
+    shortestRouteButton.addEventListener("click", () => {
+        resetRouteButtons();
+        findShortestRoute();
+    });
+    editRouteButton.addEventListener("click", () => {
+        editCurrentRoute();
+    });
 
     // 패널 토글 기능
     const panel = document.querySelector('.marker-panel');
@@ -96,15 +122,20 @@ function getQueryParams() {
 }
 
 function handleMapClick(event) {
-    if (startSelected && destinationSelected) return;
+    if (isEditMode) {
+        // 경유지 추가
+        const position = event.latLng;
+        addWaypointMarker(position);
+    } else {
+        if (startSelected && destinationSelected) return;
 
-    const position = event.latLng;
-
-    if (!startSelected) {
-        addMarkerWithAnimation('start', position);
-    } else if (!destinationSelected) {
-        addMarkerWithAnimation('destination', position);
-        enableFindRouteButton();
+        const position = event.latLng;
+        if (!startSelected) {
+            addMarkerWithAnimation('start', position);
+        } else if (!destinationSelected) {
+            addMarkerWithAnimation('destination', position);
+            enableFindRouteButton();
+        }
     }
 }
 
@@ -229,28 +260,241 @@ function addTooltips() {
     });
 }
 
-function calculateRoute(start, destination) {
-    const directionsService = new google.maps.DirectionsService();
-    const directionsRenderer = new google.maps.DirectionsRenderer({
+// 경로찾기 패널로 변경
+function switchToRoutePanel() {
+    const controlsPanel = document.querySelector('.controls');
+    const routePanel = document.querySelector('.route-controls');
+    
+    // 초기 상태 설정
+    routePanel.style.display = 'flex';
+    
+    // 애니메이션 시작
+    requestAnimationFrame(() => {
+        controlsPanel.classList.add('slide-down');
+        routePanel.classList.add('slide-up');
+    });
+    
+    // 첫 번째 패널이 완전히 사라진 후 display none 처리
+    setTimeout(() => {
+        controlsPanel.style.display = 'none';
+    }, 500); // CSS 트랜지션 시간과 동일하게 설정
+}
+
+// 초기패널로 변경
+function backToInitialPanel() {
+    const controlsPanel = document.querySelector('.controls');
+    const routePanel = document.querySelector('.route-controls');
+    
+    // 초기 패널 표시
+    controlsPanel.style.display = 'flex';
+    
+    // 애니메이션 시작
+    requestAnimationFrame(() => {
+        controlsPanel.classList.remove('slide-down');
+        routePanel.classList.remove('slide-up');
+    });
+    
+    // 애니메이션 완료 후 route 패널 숨김
+    setTimeout(() => {
+        routePanel.style.display = 'none';
+    }, 500);
+
+    // 기존 선택 초기화
+    selectLocation('start');
+    selectLocation('destination');
+}
+
+function findSafeRoute() {
+    // 안전 경로 찾기 로직 구현
+    console.log('안전 경로 찾기');
+}
+
+async function findShortestRoute() {
+    if (startMarker && destinationMarker) {
+        const start = startMarker.getPosition();
+        const end = destinationMarker.getPosition();
+        
+        console.log("최단 경로 찾기");
+
+        // 이전 경로 삭제 (새로운 최단 경로를 그리기 전 기존 경로 제거)
+        clearCurrentPolyline();
+
+        // 경유지 좌표 추출
+        const waypoints = waypointMarkers.map(marker => ({
+            lat: marker.getPosition().lat(),
+            lng: marker.getPosition().lng()
+        }));
+
+        // Tmap API 요청을 통해 경유지를 포함한 경로 데이터를 가져옴
+        try {
+            const response = await $.ajax({
+                method: "POST",
+                headers: { "appKey": "Qo2Dzd0MGI2AyknkLTB8U6jqfAz5UwUA3gaqwxjj" },
+                url: "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json",
+                data: {
+                    startX: start.lng(),
+                    startY: start.lat(),
+                    endX: end.lng(),
+                    endY: end.lat(),
+                    reqCoordType: "WGS84GEO",
+                    resCoordType: "WGS84GEO",
+                    startName: "출발지",
+                    endName: "목적지",
+                    passList: waypoints.map(point => `${point.lng},${point.lat}`).join('_') // 경유지 포함
+                }
+            });
+
+            // 응답 데이터 처리 및 경로 그리기
+            parseRoute(response);
+
+            // 최단 경로 버튼 활성화 스타일 추가
+            const shortestRouteButton = document.getElementById("shortestRoute");
+            shortestRouteButton.classList.add("edit-active");
+        } catch (error) {
+            console.error("Failed to fetch the route:", error);
+        }
+    } else {
+        console.warn("출발지와 목적지를 설정해주세요.");
+    }
+}
+
+// 다른 버튼을 클릭할 때 현재 표시된 폴리라인 제거
+function clearCurrentPolyline() {
+    if (window.currentPolyline) {
+        window.currentPolyline.setMap(null);
+        window.currentPolyline = null;
+    }
+}
+
+// 경로 편집 또는 다른 버튼 클릭 시 활성화 상태 초기화 및 기존 폴리라인 제거
+function resetRouteButtons() {
+    clearCurrentPolyline();
+    const routeButtons = document.querySelectorAll(".route-controls button");
+    routeButtons.forEach(button => button.classList.remove("edit-active"));
+}
+
+// 경로편집
+function editCurrentRoute() {
+    isEditMode = !isEditMode; // 토글형으로 상태 변경
+    const editRouteButton = document.getElementById("editRoute");
+
+    if (isEditMode) {
+        // 활성화 상태로 변경
+        editRouteButton.classList.add("edit-active");
+        console.log('경로 편집 모드 활성화');
+        // 필요한 경로 편집 기능 로직을 여기에 추가
+    } else {
+        // 비활성화 상태로 변경
+        editRouteButton.classList.remove("edit-active");
+        clearWaypointMarkers();
+        console.log('경로 편집 모드 비활성화');
+        // 경로 편집 모드 해제 시 수행할 추가 작업
+    }
+}
+
+// 경유지 추가 제한 시 모달 표시
+function showModal(message) {
+    const modal = document.getElementById("modal");
+    const modalMessage = modal.querySelector("p");
+    modalMessage.textContent = message;
+    modal.style.display = "block";
+}
+
+// 모달 닫기 버튼 이벤트 리스너
+document.getElementById("close-modal").addEventListener("click", () => {
+    document.getElementById("modal").style.display = "none";
+});
+
+// 모달 외부 클릭 시 닫기
+window.addEventListener("click", (event) => {
+    const modal = document.getElementById("modal");
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+});
+
+// 경유지 마커 추가
+function addWaypointMarker(position) {
+    if (waypointMarkers.length >= 5) {
+        showModal("경유지는 최대 5개까지 설정할 수 있습니다.");
+        return; // 경유지 5개 초과 시 함수 종료
+    }
+
+    const waypointMarker = new google.maps.Marker({
+        position: position,
         map: map,
-        suppressMarkers: true
+        title: "경유지",
+        icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 8,
+            fillColor: '#00FF00', // 초록색
+            fillOpacity: 0.8,
+            strokeWeight: 2,
+            strokeColor: '#FFFFFF'
+        },
+        animation: google.maps.Animation.DROP
     });
 
-    directionsService.route(
-        {
-            origin: start,
-            destination: destination,
-            travelMode: google.maps.TravelMode.WALKING
-        },
-        (response, status) => {
-            if (status === google.maps.DirectionsStatus.OK) {
-                directionsRenderer.setDirections(response);
-            } else {
-                console.error("경로 요청 실패:", status);
-            }
-        }
-    );
+    waypointMarkers.push(waypointMarker); // 배열에 경유지 마커 추가
+    console.log("경유지 추가:", position);
 }
+
+// 경유지 초기화 기능 (경로 편집 해제 시 경유지 마커 제거)
+function clearWaypointMarkers() {
+    waypointMarkers.forEach(marker => marker.setMap(null));
+    waypointMarkers = [];
+}
+
+// Tmap API 응답 데이터를 파싱하여 지도에 Polyline으로 표시하는 함수
+function parseRoute(data) {
+    const pathCoordinates = [];
+
+    if (data && data.features) {
+        const features = data.features;
+        features.forEach(feature => {
+            if (feature.geometry && feature.geometry.type === "LineString") {
+                feature.geometry.coordinates.forEach(coord => {
+                    const [lng, lat] = coord;
+                    pathCoordinates.push(new google.maps.LatLng(lat, lng));
+                });
+            }
+        });
+    } else {
+        console.error("Invalid route data:", data);
+        return;
+    }
+
+    // 기존 경로 제거 후 새 경로 표시
+    if (window.currentPolyline) {
+        window.currentPolyline.setMap(null);
+    }
+    window.currentPolyline = new google.maps.Polyline({
+        path: pathCoordinates,
+        geodesic: true,
+        strokeColor: "#FF0000",
+        strokeOpacity: 1.0,
+        strokeWeight: 6
+    });
+
+    window.currentPolyline.setMap(map); // Google Maps에 경로 표시
+
+    // 경로가 정상적으로 그려진 후 저장 버튼 활성화
+    enableSaveRouteButton();
+}
+
+// 저장 버튼 활성화 함수
+function enableSaveRouteButton() {
+    saveRouteButton.disabled = false;
+    saveRouteButton.classList.add("active"); // 활성화 시 스타일 추가
+}
+
+// 저장 버튼 클릭 시 이벤트
+saveRouteButton.addEventListener("click", () => {
+    if (!saveRouteButton.disabled) {
+        console.log("경로가 저장되었습니다."); // 실제 저장 로직 구현 필요
+        alert("경로가 저장되었습니다.");
+    }
+});
 
 //마커 관련 코드
 let markerGroups = {
