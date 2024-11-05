@@ -2,9 +2,9 @@ $('.message a').click(function(){
     $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
  });
 
-const BASE_URL = 'http://localhost:8080';
+//const BASE_URL = 'http://localhost:8080';
 
-//const BASE_URL = '/api'
+const BASE_URL = '/api'
 
  async function register() {
     const name = document.getElementById('name').value.trim();
