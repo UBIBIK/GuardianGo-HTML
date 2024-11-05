@@ -177,6 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (response.ok) {
                 console.log("게시물이 성공적으로 업로드되었습니다.");
                 alert("게시물이 업로드되었습니다.");
+                window.location.href = '../main/main.html';
             } else {
                 console.error("업로드 실패:", response.statusText);
                 alert("업로드 실패: " + response.statusText);
