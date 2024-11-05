@@ -1,0 +1,8 @@
+[build]
+  functions = "netlify/functions"
+  publish = "."
+
+[[redirects]]
+  from = "/api/calculate_route"
+  to = "/.netlify/functions/calculate_route"
+  status = 200
