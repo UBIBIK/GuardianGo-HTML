@@ -1,3 +1,5 @@
+const BASE_URL = 'http://localhost:8080';
+
 let map, startMarker, destinationMarker;
 let startSelected = false;
 let destinationSelected = false;
@@ -10,6 +12,8 @@ const fileMapping = {
     // 필요시 추가 파일 매핑
 };
 let markerIcons;
+// 사용자 신고 마커 그룹
+let reportMarkers = [];
 
 // 경로 저장 버튼 참조 및 초기 비활성화
 const saveRouteButton = document.getElementById("saveRoute");
@@ -111,6 +115,103 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+// 사용자 신고 데이터 가져오기
+async function fetchReports() {
+    // sessionStorage에서 userInfo 가져오기
+    const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+    if (!userInfo || !userInfo.userEmail || !userInfo.groupKey) {
+        console.error("사용자 정보가 없거나 불완전합니다. 다시 로그인해주세요.");
+        return []; // 사용자 정보가 없을 경우 빈 배열 반환
+    }
+
+    // 서버에 요청 보내기
+    const response = await fetch(`${BASE_URL}/get-element`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            userEmail: userInfo.userEmail, // 이메일을 요청 본문에 포함
+            groupKey: userInfo.groupKey // 그룹 키를 요청 본문에 포함
+        })
+    });
+
+    // 서버 응답 처리
+    if (response.ok) {
+        const element = await response.json();
+        return element.reports;
+    } else {
+        console.error("사용자 신고 데이터를 가져오는 데 실패했습니다:", response.statusText);
+        return []; // 요청 실패 시 빈 배열 반환
+    }
+}
+
+
+async function toggleReportMarkers(show) {
+    if (show) {
+        const reports = await fetchReports(); // 서버에서 신고 데이터를 가져옵니다.
+        reports.forEach(report => {
+            const position = { lat: report.latitude, lng: report.longitude };
+            const marker = new google.maps.Marker({
+                position,
+                map: map,
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE, // 원형 마커
+                    scale: 8, // 마커 크기
+                    fillColor: '#800080', // 보라색 (hex 코드)
+                    fillOpacity: 0.8,
+                    strokeWeight: 2,
+                    strokeColor: '#FFFFFF' // 외곽선 흰색
+                },
+                title: `${report.reporterName}의 사용자 신고`
+            });
+            marker.set("reportData", report); // 마커에 신고 데이터를 저장합니다.
+            marker.addListener('click', () => showReportPopup(marker)); // 마커 클릭 시 신고 내용 표시
+
+            reportMarkers.push(marker);
+        });
+    } else {
+        reportMarkers.forEach(marker => marker.setMap(null)); // 신고 마커를 숨깁니다.
+        reportMarkers = [];
+    }
+}
+
+// 신고 모달 창 표시 함수
+function showReportPopup(marker) {
+    const report = marker.get("reportData");
+    if (!report) return;
+
+    // sessionStorage에서 groupKey 가져오기
+    const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+    const groupKey = userInfo && userInfo.groupKey ? userInfo.groupKey : "default-group";
+
+    // 신고 내용을 모달에 표시
+    document.getElementById("reportText").innerText = report.content;
+    document.getElementById("reportImage").src = `${BASE_URL}/uploads/${groupKey}/${report.uuid}`; // 서버의 이미지 URL을 사용합니다.
+
+    // 모달 창 표시
+    const reportModal = document.getElementById("reportModal");
+    reportModal.style.display = "block";
+}
+
+
+// 모달 닫기 버튼 이벤트
+document.getElementById("closeReportModal").onclick = () => {
+    document.getElementById("reportModal").style.display = "none";
+};
+
+// 모달 외부 클릭 시 닫기
+window.onclick = (event) => {
+    const reportModal = document.getElementById("reportModal");
+    if (event.target === reportModal) {
+        reportModal.style.display = "none";
+    }
+};
+
+// 사용자 신고 스위치 이벤트
+document.getElementById("marker-report").addEventListener("change", (e) => {
+    toggleReportMarkers(e.target.checked);
+});
 
 function getQueryParams() {
     const urlParams = new URLSearchParams(window.location.search);

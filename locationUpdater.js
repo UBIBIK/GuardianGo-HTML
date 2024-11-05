@@ -1,9 +1,9 @@
 // locationUpdater.js
 
 // 서버 URL 및 주기적인 위치 업데이트 간격 설정 (10000ms = 10초)
-// const BASE_URL = 'http://localhost:8080';
+ const BASE_URL = 'http://localhost:8080';
 
-const BASE_URL = '/api'
+//const BASE_URL = '/api'
 const UPDATE_INTERVAL = 10000; // 10초마다 위치 업데이트
 
 // 위치 정보를 서버에 전송하는 함수

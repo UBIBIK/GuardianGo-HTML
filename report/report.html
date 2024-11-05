@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용자 신고</title>
+    <link rel="stylesheet" href="report.css">
+</head>
+<body>
+    <div class="container">
+        <div class="upload-card">
+            <h1>사용자 신고</h1>
+            
+            <div class="image-upload-container" id="imageUploadContainer">
+                <input type="file" id="imageInput" accept="image/*" class="hidden">
+                <div class="upload-placeholder" id="uploadPlaceholder">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234CAF50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7'/%3E%3Cpolyline points='17 5 12 0 7 5'/%3E%3Cline x1='12' y1='0' x2='12' y2='13'/%3E%3C/svg%3E" alt="upload">
+                    <p>이미지를 선택하거나<br>여기로 끌어다 놓으세요</p>
+                </div>
+                <div class="preview-container hidden" id="previewContainer">
+                    <img id="imagePreview" src="" alt="미리보기">
+                    <button class="remove-image" id="removeImage">✕</button>
+                </div>
+            </div>
+
+            <div class="memo-container">
+                <textarea id="memoInput" placeholder="메모를 입력하세요..." rows="4"></textarea>
+                <div class="memo-counter">
+                    <span id="currentLength">0</span>
+                    <span>/500</span>
+                </div>
+            </div>
+
+            <button id="uploadButton" class="upload-button" disabled>
+                업로드
+                <span class="button-loader hidden"></span>
+            </button>
+        </div>
+    </div>
+    <script src="report.js"></script>
+</body>
+</html>

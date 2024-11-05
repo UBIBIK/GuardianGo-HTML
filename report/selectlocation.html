@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>위치 선택</title>
+    <link rel="stylesheet" href="selectlocation.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDysXlwPRC7TpH5_UW_-98S_5rnJmfdVAw" defer></script>
+    <script src="selectlocation.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="title">신고 할 위치를 선택해주세요</h1>
+        </header>
+        
+        <main>
+            <div id="map"></div>
+            
+            <div class="button-container">
+                <button id="reset-btn" class="btn">
+                    <span class="btn-icon">📍</span>
+                    다시 선택하기
+                </button>
+                <button id="next-btn" class="btn" disabled>
+                    다음
+                    <span class="btn-icon">→</span>
+                </button>
+            </div>
+
+            <div id="marker-popup" class="popup">
+                <span class="popup-text">위치가 선택되었습니다!</span>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

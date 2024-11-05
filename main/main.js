@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (index === 2) {
                 window.location.href = '../group/group.html'; 
             }
+            if (index === 3) {
+                window.location.href = '../report/selectlocation.html'; 
+            }
         });
     });
 });
