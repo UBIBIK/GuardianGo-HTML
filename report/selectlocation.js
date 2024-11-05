@@ -11,7 +11,7 @@ function initMap() {
     
     map = new google.maps.Map(document.getElementById('map'), {
         center: defaultLocation,
-        zoom: 12,
+        zoom: 15,
         styles: [
             {
                 featureType: "poi",
