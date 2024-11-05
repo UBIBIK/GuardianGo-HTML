@@ -1,2 +1,2 @@
 /api/* http://34.64.214.135:8080/:splat 200
-/api/calculate_route http://34.64.214.135:5000/calculate_route 200
+/api/calculate_route http://34.64.214.135:5000/calculate_route 200!
