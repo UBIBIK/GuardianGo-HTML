@@ -321,7 +321,7 @@ async function findSafeRoute() {
         clearCurrentPolyline();
 
         try {
-            const response = await fetch("/api/calculate_route", {
+            const response = await fetch("/.netlify/functions/calculate_route", {
             // const response = await fetch("http://127.0.0.1:5000/calculate_route", {
                 method: "POST",
                 headers: {
