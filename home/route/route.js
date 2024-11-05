@@ -304,9 +304,72 @@ function backToInitialPanel() {
     selectLocation('destination');
 }
 
-function findSafeRoute() {
-    // 안전 경로 찾기 로직 구현
-    console.log('안전 경로 찾기');
+async function findSafeRoute() {
+    if (startMarker && destinationMarker) {
+        const start = startMarker.getPosition();
+        const end = destinationMarker.getPosition();
+
+        // 경유지 좌표 추출
+        const waypoints = waypointMarkers.map(marker => ({
+            lat: marker.getPosition().lat(),
+            lon: marker.getPosition().lng()
+        }));
+
+        console.log("안전 경로 찾기");
+
+        // 이전 경로 삭제
+        clearCurrentPolyline();
+
+        try {
+            const response = await fetch("http://34.62.214.135:5000/calculate_route", {
+            // const response = await fetch("http://127.0.0.1:5000/calculate_route", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    start: { lat: start.lat(), lon: start.lng() },
+                    end: { lat: end.lat(), lon: end.lng() },
+                    waypoints: waypoints // 경유지 정보 추가
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.safety_path) {
+                parseSafetyRoute(data.safety_path);
+                const safeRouteButton = document.getElementById("safeRoute");
+                safeRouteButton.classList.add("edit-active");
+            } else {
+                alert("안전 경로를 찾을 수 없습니다.");
+            }
+        } catch (error) {
+            console.error("Failed to fetch safe route:", error);
+            alert("안전 경로 요청 중 오류가 발생했습니다.");
+        }
+    } else {
+        console.warn("출발지와 목적지를 설정해주세요.");
+    }
+}
+
+
+// 안전 경로 데이터를 기반으로 Polyline을 지도에 그리는 함수
+function parseSafetyRoute(routeEdges) {
+    const pathCoordinates = routeEdges.map(edge => new google.maps.LatLng(edge.start[1], edge.start[0]));
+
+    // 기존 경로 제거 후 새 경로 표시
+    if (window.currentPolyline) {
+        window.currentPolyline.setMap(null);
+    }
+    window.currentPolyline = new google.maps.Polyline({
+        path: pathCoordinates,
+        geodesic: true,
+        strokeColor: "#00FF00", // 안전 경로 색상: 녹색
+        strokeOpacity: 1.0,
+        strokeWeight: 6
+    });
+
+    window.currentPolyline.setMap(map); // Google Maps에 경로 표시
 }
 
 async function findShortestRoute() {
