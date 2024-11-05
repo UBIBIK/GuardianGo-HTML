@@ -1,7 +1,8 @@
 :root {
-    --main-color: #90EE90;
-    --hover-color: #7ac97a;
-    --active-color: #689f68;
+    --main-color: rgba(144, 238, 144, 0.3);
+    --hover-color: rgba(122, 201, 122, 0.4);
+    --active-color: rgba(104, 159, 104, 0.5);
+    --border-color: rgba(255, 255, 255, 0.5);
 }
 
 body {
@@ -10,8 +11,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f0f8f0;
-    overflow: hidden; /* 스크롤 방지 */
+    background: linear-gradient(135deg, #a8e6cf 0%, #7dc9a4 100%);
+    overflow: hidden;
+    font-family: 'Arial', sans-serif;
 }
 
 .container {
@@ -22,17 +24,18 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    perspective: 1000px;
 }
 
 .grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: 20px;
-    width: 500px; /* 고정된 크기 설정 */
-    height: 750px; /* 고정된 크기 설정 */
+    gap: 25px;
+    width: 500px;
+    height: 750px;
     opacity: 0;
-    transform: translateY(20px);
+    transform-style: preserve-3d;
     animation: fadeInUp 0.8s ease forwards;
 }
 
@@ -40,27 +43,66 @@ body {
     width: 100%;
     height: 100%;
     aspect-ratio: 1 / 1;
-    border: none;
-    border-radius: 12px;
-    background-color: var(--main-color);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.95) rotateX(10deg);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+}
+
+.grid-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.grid-button:hover::before {
+    left: 100%;
 }
 
 .grid-button img {
-    width: 80%; /* 버튼 크기의 60%로 이미지 크기 조정 */
-    height: 80%;
-    object-fit: contain; /* 이미지가 잘리지 않고 크기에 맞춰 조정됨 */
-    pointer-events: none; /* 이미지를 클릭해도 이벤트가 버튼으로 전달됨 */
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+    pointer-events: none;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
 }
 
+.button-label {
+    margin-top: 10px;
+    color: rgba(0, 0, 0, 0.9);
+    font-size: 1.5em;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
+
+.grid-button:hover .button-label {
+    opacity: 1;
+    transform: translateY(0);
+}
 
 .grid-button:nth-child(1) { animation: popIn 0.5s ease forwards 0.1s; }
 .grid-button:nth-child(2) { animation: popIn 0.5s ease forwards 0.2s; }
@@ -70,33 +112,27 @@ body {
 .grid-button:nth-child(6) { animation: popIn 0.5s ease forwards 0.6s; }
 
 .grid-button:hover {
-    transform: translateY(-5px) scale(1.02);
-    background-color: var(--hover-color);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transform: translateY(-5px) scale(1.02) rotateX(0deg);
+    background: var(--hover-color);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.grid-button:hover img {
+    transform: scale(1.1);
 }
 
 .grid-button:active {
-    transform: scale(0.98);
-    background-color: var(--active-color);
+    transform: scale(0.98) rotateX(0deg);
+    background: var(--active-color);
 }
 
-.grid-button::after {
-    content: '';
+.ripple {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255,255,255,0.2);
+    background: rgba(255, 255, 255, 0.4);
     border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.3s ease-out, height 0.3s ease-out;
-}
-
-.grid-button:active::after {
-    width: 300px;
-    height: 300px;
-    opacity: 0;
+    pointer-events: none;
+    transform: scale(0);
+    animation: ripple 0.8s ease-out;
 }
 
 @keyframes fadeInUp {
@@ -109,14 +145,42 @@ body {
 @keyframes popIn {
     to {
         opacity: 1;
-        transform: scale(1);
+        transform: scale(1) rotateX(0deg);
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
     }
 }
 
 @media (max-width: 768px) {
     .grid {
-        gap: 10px;
-        width: 90vw; /* 작은 화면에서는 그리드의 크기를 살짝 줄임 */
+        gap: 15px;
+        width: 90vw;
         height: 90vh;
+    }
+
+    .grid-button img {
+        width: 50%;
+        height: 50%;
+    }
+
+    .button-label {
+        font-size: 0.8em;
     }
 }

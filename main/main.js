@@ -1,20 +1,39 @@
-// script.js
 document.addEventListener('DOMContentLoaded', () => {
     const buttons = document.querySelectorAll('.grid-button');
 
     buttons.forEach((button, index) => {
         button.addEventListener('click', (event) => {
             createRippleEffect(event);
+            
+            // 약간의 지연 후 페이지 이동
+            setTimeout(() => {
+                if (index === 0) {
+                    window.location.href = '../home/home.html';
+                } else if (index === 2) {
+                    window.location.href = '../group/group.html';
+                } else if (index === 3) {
+                    window.location.href = '../report/selectlocation.html';
+                }
+            }, 300);
+        });
 
-            if (index === 0) {
-                window.location.href = '../home/home.html';
-            }
-            if (index === 2) {
-                window.location.href = '../group/group.html'; 
-            }
-            if (index === 3) {
-                window.location.href = '../report/selectlocation.html'; 
-            }
+        // 마우스 움직임에 따른 3D 효과
+        button.addEventListener('mousemove', (e) => {
+            const rect = button.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (y - centerY) / 10;
+            const rotateY = (centerX - x) / 10;
+            
+            button.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+        });
+
+        button.addEventListener('mouseleave', () => {
+            button.style.transform = '';
         });
     });
 });
@@ -37,24 +56,3 @@ function createRippleEffect(event) {
 
     button.appendChild(circle);
 }
-
-// 추가 스타일을 동적으로 추가
-const style = document.createElement('style');
-style.textContent = `
-    .ripple {
-        position: absolute;
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 50%;
-        pointer-events: none;
-        transform: scale(0);
-        animation: ripple 0.6s linear;
-    }
-
-    @keyframes ripple {
-        to {
-            transform: scale(4);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(style);
