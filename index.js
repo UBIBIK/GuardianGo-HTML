@@ -1,10 +1,27 @@
-$('.message a').click(function(){
-    $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
- });
+$('.message a').click(function(e){
+    e.preventDefault();
+    $('form').animate({
+        height: "toggle",
+        opacity: "toggle"
+    }, "slow").promise().done(function() {
+        // 폼 전환 후 로고 흔들기 효과
+        $('.logo-container img').css('transform', 'scale(1.1)');
+        setTimeout(() => {
+            $('.logo-container img').css('transform', 'scale(1)');
+        }, 200);
+    });
+});
 
 //const BASE_URL = 'http://localhost:8080';
 
 const BASE_URL = '/api'
+
+document.addEventListener('DOMContentLoaded', function() {
+    // 로딩 화면 처리
+    setTimeout(() => {
+        document.querySelector('.loading-overlay').classList.add('hide');
+    }, 1500);
+});
 
  async function register() {
     const name = document.getElementById('name').value.trim();
