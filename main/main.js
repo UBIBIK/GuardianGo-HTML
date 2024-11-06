@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     buttons.forEach((button, index) => {
         button.addEventListener('click', (event) => {
             createRippleEffect(event);
-            
+
             // 약간의 지연 후 페이지 이동
             setTimeout(() => {
                 if (index === 0) {
@@ -22,19 +22,27 @@ document.addEventListener('DOMContentLoaded', () => {
             const rect = button.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            
+
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
-            
+
             const rotateX = (y - centerY) / 10;
             const rotateY = (centerX - x) / 10;
-            
+
             button.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
         });
 
         button.addEventListener('mouseleave', () => {
             button.style.transform = '';
         });
+    });
+
+    const title = document.querySelector('.project-title');
+    title.addEventListener('mouseenter', () => {
+        title.style.transform = 'scale(1.1)';
+    });
+    title.addEventListener('mouseleave', () => {
+        title.style.transform = '';
     });
 });
 

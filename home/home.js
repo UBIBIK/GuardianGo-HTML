@@ -64,8 +64,8 @@ function createCustomMarker(position, title, memberData, isCurrentUser = false) 
         const point = projection.fromLatLngToDivPixel(position);
 
         if (point) {
-            containerDiv.style.left = (point.x - 10) + 'px';
-            containerDiv.style.top = (point.y - 10) + 'px';
+            containerDiv.style.left = (point.x - 15) + 'px';
+            containerDiv.style.top = (point.y - 35) + 'px';
             containerDiv.style.position = 'absolute';
         }
     };
