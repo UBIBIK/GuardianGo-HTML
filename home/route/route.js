@@ -405,6 +405,12 @@ function backToInitialPanel() {
     // 기존 선택 초기화
     selectLocation('start');
     selectLocation('destination');
+
+    // 경로 편집 상태 비활성화
+    isEditMode = false;
+
+    // 경로 편집 마커 삭제
+    clearWaypointMarkers();
 }
 
 async function findSafeRoute() {
