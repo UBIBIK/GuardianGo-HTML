@@ -153,14 +153,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         // 멤버 목록 업데이트
         updateMembersList(groupData.groupMember);
 
-        // 현재 사용자가 그룹장인지 확인하여 삭제 버튼 표시
+        // 현재 사용자가 그룹장인지 확인하여 삭제 및 나가기 버튼 처리
         const deleteGroupBtn = document.getElementById('deleteGroupBtn');
+        const leaveGroupBtn = document.getElementById('leaveGroupBtn');
+        
         if (userInfo.userEmail === groupData.groupMaster) {
-            deleteGroupBtn.classList.remove('hidden'); // 그룹장이면 버튼 표시
+            deleteGroupBtn.classList.remove('hidden');  // 그룹장이면 삭제 버튼 표시
+            leaveGroupBtn.classList.add('hidden');      // 그룹장은 나가기 버튼 숨기기
         } else {
-            deleteGroupBtn.classList.add('hidden'); // 그룹장이 아니면 버튼 숨기기
+            deleteGroupBtn.classList.add('hidden');     // 그룹장이 아니면 삭제 버튼 숨기기
+            leaveGroupBtn.classList.remove('hidden');   // 그룹 멤버에게 나가기 버튼 표시
         }
     };
+
 
     // 멤버 목록 업데이트 함수
     const updateMembersList = (members) => {
@@ -332,6 +337,61 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
+    // 그룹 멤버 나가기 핸들러 함수
+    const handleLeaveMember = async () => {
+        try {
+            showLoading();
+
+            // 서버로 그룹 탈퇴 요청 보내기
+            const response = await fetch(`${BASE_URL}/group-member-leave`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userEmail: userInfo.userEmail,
+                    userName: userInfo.userName,
+                    groupKey: userInfo.groupKey,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('그룹 탈퇴에 실패했습니다.');
+            }
+
+            // 탈퇴 완료 후 UI 업데이트
+            delete userInfo.groupKey; // userInfo 객체에서 groupKey 제거
+            sessionStorage.setItem('userInfo', JSON.stringify(userInfo)); // 변경된 userInfo 저장
+
+            showNoGroupState(); // 그룹 정보 대신 그룹 없는 상태 표시
+            showToast('그룹을 성공적으로 탈퇴했습니다.');  // 성공 메시지 표시
+        } catch (error) {
+            console.error('그룹 탈퇴 중 오류 발생:', error);
+            showError('그룹을 탈퇴하는 중 오류가 발생했습니다.');
+        } finally {
+            hideLoading();
+        }
+    };
+
+    // 상단 알림 표시 함수
+    const showToast = (message) => {
+        const toast = document.createElement('div');
+        toast.className = 'toast success';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 100);
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 300);
+        }, 3000);
+    };
+
     // 이벤트 리스너 설정
     document.getElementById('createGroupBtn').addEventListener('click', () => {
         console.log("Create Group button clicked");
@@ -343,9 +403,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         showModal(); // 그룹 참여 버튼 클릭 시 모달 표시
     });
 
-    // 그룹 삭제 버튼 이벤트 리스너 추가
+    // 그룹 삭제 버튼 이벤트 리스너
     document.getElementById('deleteGroupBtn').addEventListener('click', () => {
-        showDeleteModal();
+        if (confirm("정말로 그룹을 삭제 하시겠습니까?")) {
+            showDeleteModal();
+        }
+    });
+
+    // 그룹 나가기 버튼 이벤트 리스너
+    document.getElementById('leaveGroupBtn').addEventListener('click', async () => {
+        if (confirm("정말로 그룹을 나가시겠습니까?")) {
+            await handleLeaveMember();
+        }
     });
 
     // 모달 외부 클릭 시 닫기
