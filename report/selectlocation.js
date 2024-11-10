@@ -7,33 +7,25 @@ function initMap() {
     const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
     const defaultLocation = userInfo && userInfo.locationInfo
         ? { lat: userInfo.locationInfo.latitude, lng: userInfo.locationInfo.longitude }
-        : { lat: 34.8118351, lng: 126.3921664 }; // 기본 좌표 설정
+        : { lat: 34.8118351, lng: 126.3921664 };
+
+    // 좌표 유효성 검사를 추가하여 유효하지 않으면 기본 좌표를 사용
+    if (isNaN(defaultLocation.lat) || isNaN(defaultLocation.lng)) {
+        console.warn("Invalid default location; using fallback coordinates.");
+        defaultLocation.lat = 34.8118351;
+        defaultLocation.lng = 126.3921664;
+    }
 
     map = new google.maps.Map(document.getElementById('map'), {
         center: defaultLocation,
         zoom: 15,
-        styles: [
-            {
-                featureType: "poi",
-                elementType: "labels",
-                stylers: [{ visibility: "off" }]
-            }
-        ],
+        styles: [{ featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] }],
         mapTypeControl: false,
         streetViewControl: false
     });
 
-    // 지도 클릭 이벤트 리스너
     map.addListener('click', (e) => {
         placeMarker(e.latLng);
-    });
-
-    // 모바일 환경 대응: 지도가 로드된 후 크기를 다시 계산
-    google.maps.event.addListenerOnce(map, 'tilesloaded', () => {
-        setTimeout(() => {
-            google.maps.event.trigger(map, 'resize');
-            map.setCenter(defaultLocation); // 센터 재설정
-        }, 500); // 일정 시간 지연 후 resize 이벤트
     });
 }
 
@@ -103,12 +95,18 @@ document.addEventListener('DOMContentLoaded', () => {
 // 모바일 환경 대응: 지도 크기를 화면 크기에 맞게 조정
 function handleResize() {
     google.maps.event.trigger(map, 'resize');
-    const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
-    const defaultLocation = userInfo && userInfo.locationInfo
-        ? { lat: userInfo.locationInfo.latitude, lng: userInfo.locationInfo.longitude }
-        : { lat: 34.8118351, lng: 126.3921664 };
-
-    map.setCenter(defaultLocation); // 센터 재설정
+    const center = map.getCenter();
+    setTimeout(() => {
+        map.setCenter(center); // 지도를 중앙으로 재설정
+    }, 500);
 }
+
+// JavaScript 코드: Android에서 좌표를 전달받아 처리
+window.receiveLocationFromAndroid = function(lat, lng) {
+    const location = new google.maps.LatLng(lat, lng);
+    map.setCenter(location);
+    placeMarker(location);
+};
+
 
 window.addEventListener('resize', handleResize);
