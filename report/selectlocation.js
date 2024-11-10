@@ -78,7 +78,9 @@ function showPopup() {
 
 // 이벤트 리스너 설정
 document.addEventListener('DOMContentLoaded', () => {
-    initMap();
+    setTimeout(() => {
+        initMap();
+    }, 300);
 
     document.getElementById('reset-btn').addEventListener('click', () => {
         if (marker) {
@@ -97,3 +99,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// 모바일 환경 대응: 지도 크기를 화면 크기에 맞게 조정
+function handleResize() {
+    google.maps.event.trigger(map, 'resize');
+    const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+    const defaultLocation = userInfo && userInfo.locationInfo
+        ? { lat: userInfo.locationInfo.latitude, lng: userInfo.locationInfo.longitude }
+        : { lat: 34.8118351, lng: 126.3921664 };
+
+    map.setCenter(defaultLocation); // 센터 재설정
+}
+
+window.addEventListener('resize', handleResize);
