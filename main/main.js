@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (index === 4) { // 긴급호출 버튼
                     activateEmergency();
                 }
-            }, 100);
+            }, 50);
         });
 
         // 마우스 움직임에 따른 3D 효과
