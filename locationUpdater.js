@@ -1,5 +1,6 @@
 (() => {
-    const BASE_URL = 'http://localhost:8080';
+    //const BASE_URL = 'http://localhost:8080';
+    const BASE_URL = '/api'
     const UPDATE_INTERVAL = 5000; // 5초마다 위치 업데이트
     let locationAccessDenied = false; // 권한 거부 상태를 추적하는 변수
 

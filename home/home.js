@@ -1,3 +1,6 @@
+//const BASE_URL = 'http://localhost:8080';
+const BASE_URL = '/api'
+
 let map;
 let markers = [];
 let routePath;
@@ -392,7 +395,7 @@ async function deleteRouteFromServer() {
         throw new Error("사용자 정보가 없습니다.");
     }
 
-    const response = await fetch("http://localhost:8080/delete-route", {
+    const response = await fetch(`${BASE_URL}/delete-route`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
