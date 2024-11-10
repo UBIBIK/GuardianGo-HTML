@@ -215,6 +215,7 @@ document.getElementById("marker-report").addEventListener("change", (e) => {
     toggleReportMarkers(e.target.checked);
 });
 
+// url로 정보 가져오기
 function getQueryParams() {
     const urlParams = new URLSearchParams(window.location.search);
     return {
@@ -690,6 +691,9 @@ async function sendRouteToServer() {
             waypoints: waypoints
         }
     };
+
+    // 서버 전송 전 JSON 데이터 확인
+    console.log("RouteRequest JSON:", JSON.stringify(routeRequest));
 
     // 서버로 전송
     try {
