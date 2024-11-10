@@ -30,6 +30,14 @@ function initMap() {
         mapTypeControl: true
     });
 
+    // 사용자 위치로 출발지 마커 초기화
+    const userParams = getQueryParams();
+    if (userParams.latitude && userParams.longitude) {
+        const startPosition = { lat: userParams.latitude, lng: userParams.longitude };
+        addMarkerWithAnimation('start', startPosition);
+        map.setCenter(startPosition); // 초기 위치로 맵 중심 설정
+    }
+
     // 마커 아이콘 정의
     markerIcons = {
         accidents: { url: './marker_image/accidents.png', scaledSize: new google.maps.Size(50, 50) },
