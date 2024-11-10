@@ -663,10 +663,56 @@ function enableSaveRouteButton() {
 // 저장 버튼 클릭 시 이벤트
 saveRouteButton.addEventListener("click", () => {
     if (!saveRouteButton.disabled) {
-        console.log("경로가 저장되었습니다."); // 실제 저장 로직 구현 필요
-        alert("경로가 저장되었습니다.");
+        sendRouteToServer(); // 서버로 경로 전송
     }
 });
+
+// 사용자 경로 정보를 서버로 전송
+async function sendRouteToServer() {
+    const userParams = getQueryParams();
+    const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+
+    // 경로 정보를 위한 startLocation, endLocation 및 waypoints 준비
+    const startLocation = startMarker ? { latitude: startMarker.getPosition().lat(), longitude: startMarker.getPosition().lng() } : null;
+    const endLocation = destinationMarker ? { latitude: destinationMarker.getPosition().lat(), longitude: destinationMarker.getPosition().lng() } : null;
+    const waypoints = waypointMarkers.map(marker => ({
+        latitude: marker.getPosition().lat(),
+        longitude: marker.getPosition().lng()
+    }));
+
+    // RouteRequest 객체 생성
+    const routeRequest = {
+        userName: userParams.name, // URL에서 전달받은 이름
+        groupKey: userInfo.groupKey, // sessionStorage에서 가져온 groupKey
+        route: { // Route 객체 생성
+            startLocation: startLocation,
+            endLocation: endLocation,
+            waypoints: waypoints
+        }
+    };
+
+    // 서버로 전송
+    try {
+        const response = await fetch(`${BASE_URL}/set-route`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(routeRequest)
+        });
+
+        if (response.ok) {
+            console.log("경로가 서버에 성공적으로 전송되었습니다.");
+            alert("경로가 저장되었습니다.");
+        } else {
+            console.error("서버에 경로 전송 실패:", response.statusText);
+            alert("경로 저장에 실패했습니다.");
+        }
+    } catch (error) {
+        console.error("서버 요청 중 오류 발생:", error);
+        alert("서버 요청 중 오류가 발생했습니다.");
+    }
+}
 
 //마커 관련 코드
 let markerGroups = {
