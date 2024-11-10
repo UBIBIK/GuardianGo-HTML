@@ -30,7 +30,7 @@ function initMap() {
         mapTypeControl: true
     });
 
-    // 이제 `google` 객체가 초기화되었으므로 `markerIcons` 정의
+    // 마커 아이콘 정의
     markerIcons = {
         accidents: { url: './marker_image/accidents.png', scaledSize: new google.maps.Size(50, 50) },
         bell: { url: './marker_image/bell.png', scaledSize: new google.maps.Size(50, 50) },
@@ -41,23 +41,26 @@ function initMap() {
         school_zone: { url: './marker_image/school_zone.png', scaledSize: new google.maps.Size(50, 50) }
     };
 
-    const userParams = getQueryParams();
-    if (userParams.latitude && userParams.longitude) {
-        const userPosition = new google.maps.LatLng(userParams.latitude, userParams.longitude);
-        addMarkerWithAnimation('start', userPosition);
-    }
+    // 데이터 로드
+    loadAllMarkers(); // 지도 초기화 후 마커 로드
 
-    fetch('./data/safety_mokpo_final.geojson')
-        .then(response => response.json())
-        .then(data => {
-            map.data.addGeoJson(data);
-            map.data.setStyle({ clickable: true });
-            styleRoads();
-        });
-
+    // 지도 클릭 이벤트 및 다른 설정들
     map.addListener('click', handleMapClick);
     addTooltips();
 }
+
+// 모든 마커 카테고리 로드
+function loadAllMarkers() {
+    const categories = ['accidents', 'bell', 'cctv', 'convenience', 'crime', 'fire_fighting', 'school_zone'];
+    categories.forEach(category => {
+        loadMarkersForCategory(category);
+        const checkbox = document.getElementById(`marker-${category}`);
+        if (checkbox) {
+            checkbox.addEventListener('change', () => toggleMarkers(category));
+        }
+    });
+}
+
 
 document.addEventListener("DOMContentLoaded", () => {
     // findRoute 버튼 이벤트 리스너
