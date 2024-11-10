@@ -673,13 +673,17 @@ async function sendRouteToServer() {
     const userParams = getQueryParams();
     const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
 
-    // 경로 정보를 위한 startLocation, endLocation 및 waypoints 준비
+    // 경로 정보를 위한 startLocation 및 endLocation 준비
     const startLocation = startMarker ? { latitude: startMarker.getPosition().lat(), longitude: startMarker.getPosition().lng() } : null;
     const endLocation = destinationMarker ? { latitude: destinationMarker.getPosition().lat(), longitude: destinationMarker.getPosition().lng() } : null;
-    const waypoints = waypointMarkers.map(marker => ({
-        latitude: marker.getPosition().lat(),
-        longitude: marker.getPosition().lng()
-    }));
+
+    // 폴리라인 경로에서 waypoints 추출 (폴리라인의 모든 좌표를 waypoints로 사용)
+    const waypoints = window.currentPolyline
+        ? window.currentPolyline.getPath().getArray().map(latlng => ({
+            latitude: latlng.lat(),
+            longitude: latlng.lng()
+        }))
+        : [];
 
     // RouteRequest 객체 생성
     const routeRequest = {
@@ -688,7 +692,7 @@ async function sendRouteToServer() {
         route: { // Route 객체 생성
             startLocation: startLocation,
             endLocation: endLocation,
-            waypoints: waypoints
+            waypoints: waypoints // 폴리라인 좌표를 경유지로 전송
         }
     };
 
