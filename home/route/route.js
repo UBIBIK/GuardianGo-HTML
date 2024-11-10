@@ -484,6 +484,9 @@ function parseSafetyRoute(routeEdges) {
     });
 
     window.currentPolyline.setMap(map); // Google Maps에 경로 표시
+
+    // 경로 저장 버튼 활성화
+    enableSaveRouteButton();
 }
 
 async function findShortestRoute() {
