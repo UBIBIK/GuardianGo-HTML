@@ -31,10 +31,10 @@
 
     function getLocationFromDevice() {
         if (typeof Android !== 'undefined' && Android.getLocation) {
-            // Android 환경에서는 Android 인터페이스를 사용해 위치 정보 요청
+            // Android 환경에서 위치 정보를 요청
             Android.getLocation();
         } else if (navigator.geolocation) {
-            // PC 환경에서는 브라우저의 geolocation API 사용
+            // PC 환경에서 위치 정보 가져오기
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const { latitude, longitude } = position.coords;
@@ -47,6 +47,11 @@
             console.error('위치 정보를 사용할 수 없는 환경입니다.');
         }
     }
+
+    // Android에서 위치 정보를 전달받는 함수
+    window.receiveLocationFromAndroid = function(latitude, longitude) {
+        sendLocationToServer(latitude, longitude);
+    };
 
     // 주기적으로 위치 업데이트 요청
     setInterval(getLocationFromDevice, UPDATE_INTERVAL);
