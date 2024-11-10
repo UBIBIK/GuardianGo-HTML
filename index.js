@@ -12,9 +12,9 @@ $('.message a').click(function(e){
     });
 });
 
-//const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'http://localhost:8080';
 
-const BASE_URL = '/api'
+//const BASE_URL = '/api'
 
 document.addEventListener('DOMContentLoaded', function() {
     // 로딩 화면 처리

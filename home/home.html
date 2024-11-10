@@ -23,6 +23,30 @@
         </div>
     </div>
 
+    <!-- 경로 정보 패널 -->
+    <div class="route-info-panel collapsed">
+        <div class="panel-header">
+            <h3>경로 정보</h3>
+            <button id="togglePanelBtn">▲</button>
+        </div>
+        <div class="panel-content">
+            <p id="routeDetails"></p>
+            <!-- 도착 버튼 -->
+            <button id="arrivalButton" class="arrival-btn">도착</button>
+        </div>
+    </div>
+
+    <!-- 도착 확인 모달 -->
+    <div id="arrivalConfirmationModal" class="modal hidden">
+        <div class="modal-content">
+            <p>목적지에 도착하셨나요?</p>
+            <div class="modal-buttons">
+                <button id="cancelArrivalBtn">취소</button>
+                <button id="confirmArrivalBtn">확인</button>
+            </div>
+        </div>
+    </div>
+
     <script src="../locationUpdater.js"></script>
     <script src="home.js"></script>
 </body>

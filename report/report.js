@@ -1,6 +1,6 @@
-//const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'http://localhost:8080';
 
-const BASE_URL = '/api'
+//const BASE_URL = '/api'
 
 document.addEventListener('DOMContentLoaded', function() {
     // 요소 선택
