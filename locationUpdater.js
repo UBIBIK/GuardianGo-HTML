@@ -40,7 +40,23 @@
                     const { latitude, longitude } = position.coords;
                     sendLocationToServer(latitude, longitude);
                 },
-                (error) => console.error("위치 정보를 가져오는 중 오류 발생:", error),
+                (error) => {
+                    console.error(`위치 정보를 가져오는 중 오류 발생: ${error.message} (code: ${error.code})`);
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            console.warn("위치 권한이 거부되었습니다. 설정에서 권한을 허용해 주세요.");
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            console.warn("위치 정보를 사용할 수 없습니다.");
+                            break;
+                        case error.TIMEOUT:
+                            console.warn("위치 정보를 가져오는 요청이 시간 초과되었습니다.");
+                            break;
+                        default:
+                            console.warn("알 수 없는 오류가 발생했습니다.");
+                            break;
+                    }
+                },
                 { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
             );
         } else {
