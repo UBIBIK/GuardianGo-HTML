@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.location.href = '../group/group.html';
                 } else if (index === 3) {
                     window.location.href = '../report/selectlocation.html';
+                } else if (index === 4) { // 긴급호출 버튼
+                    activateEmergency();
                 }
             }, 300);
         });
@@ -63,4 +65,50 @@ function createRippleEffect(event) {
     }
 
     button.appendChild(circle);
+}
+
+// 긴급호출 기능
+function activateEmergency() {
+    const sirenSound = document.getElementById('sirenSound');
+    const emergencyModal = document.getElementById('emergencyModal');
+    
+    // 사이렌 재생
+    sirenSound.play().catch(error => {
+        console.log("오디오 재생 실패:", error);
+    });
+    
+    // 모달 표시
+    emergencyModal.style.display = 'flex';
+    
+    // 버튼 이펙트
+    const button = document.getElementById('emergencyModalClose');
+    
+    button.addEventListener('mousedown', function(e) {
+        const x = e.offsetX;
+        const y = e.offsetY;
+        
+        const effect = this.querySelector('.button-effect');
+        effect.style.left = `${x}px`;
+        effect.style.top = `${y}px`;
+        
+        const size = Math.max(this.offsetWidth, this.offsetHeight) * 2;
+        effect.style.width = effect.style.height = `${size}px`;
+        
+        setTimeout(() => {
+            effect.style.width = effect.style.height = '0';
+        }, 600);
+    });
+    
+    // 모달 닫기
+    button.addEventListener('click', () => {
+        sirenSound.pause();
+        sirenSound.currentTime = 0;
+        
+        // 페이드아웃 애니메이션 후 모달 닫기
+        emergencyModal.style.animation = 'fadeIn 0.3s ease-out reverse';
+        setTimeout(() => {
+            emergencyModal.style.display = 'none';
+            emergencyModal.style.animation = '';
+        }, 300);
+    });
 }
