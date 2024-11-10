@@ -47,6 +47,8 @@ function initMap() {
     // 지도 클릭 이벤트 및 다른 설정들
     map.addListener('click', handleMapClick);
     addTooltips();
+
+    map.data.loadGeoJson('./data/safety_mokpo_final.geojson', null, styleRoads);
 }
 
 // 모든 마커 카테고리 로드
