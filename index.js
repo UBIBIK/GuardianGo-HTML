@@ -84,7 +84,7 @@ async function login() {
     const password = document.getElementById('login-password').value.trim();
 
     if (!username || !password) {
-        alert("Please enter both username and password.");
+        alert("이메일과 비밀번호를 모두 입력해주세요.");
         return;
     }
 
@@ -106,7 +106,7 @@ async function login() {
             const userInfo = await response.json();
             sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
 
-            alert(`Login successful. Welcome, ${userInfo.userName}!`);
+            alert(`환영합니다, ${userInfo.userName}!`);
 
             // userInfo에 groupKey가 있으면 그룹 정보를 서버에서 가져와 sessionStorage에 저장
             if (userInfo.groupKey) {
@@ -133,10 +133,10 @@ async function login() {
 
             window.location.href = "main/main.html";
         } else {
-            alert("Login failed. Please check your username and password.");
+            alert("로그인 실패, 이메일과 비밀번호를 확인해주세요.");
         }
     } catch (error) {
         console.error("Login error:", error);
-        alert("An error occurred while logging in. Please try again later.");
+        alert("서버 오류, 잠시 후 다시 실행해주세요.");
     }
 }
