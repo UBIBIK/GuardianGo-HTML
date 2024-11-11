@@ -79,35 +79,53 @@ function fetchRoutes() {
     }
   }
 
-  function renderRouteList(routes) {
-    routeListContainer.innerHTML = '';
+    // 경로 목록을 화면에 렌더링
+    function renderRouteList(routes) {
+        // 기존 리스트 항목 제거
+        routeListContainer.innerHTML = '';
 
-    if (!routes || routes.length === 0) {
-      routeListContainer.parentNode.appendChild(emptyMessage);
-      return;
+        // 경로 목록이 비어 있는 경우 빈 메시지 표시
+        if (!routes || routes.length === 0) {
+            routeListContainer.parentNode.appendChild(emptyMessage);
+            return;
+        }
+
+        // 경로 목록이 있을 경우 빈 메시지 제거
+        if (emptyMessage.parentNode) {
+            emptyMessage.parentNode.removeChild(emptyMessage);
+        }
+
+        // 각 경로 정보를 리스트 항목으로 추가
+        routes.forEach((route) => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            const h2 = document.createElement('h2');
+            const p = document.createElement('p');
+
+            // 경로 제목과 시간 설정
+            h2.textContent = `${route.userName}의 경로`;
+            
+            // 경로 저장 시간을 사람이 읽을 수 있는 형식으로 표시
+            p.textContent = `사용 날짜: ${formatDate(route.time)}`;
+
+            a.href = '#';
+            a.appendChild(h2);
+            a.appendChild(p);
+            li.appendChild(a);
+            routeListContainer.appendChild(li);
+        });
     }
 
-    if (emptyMessage.parentNode) {
-      emptyMessage.parentNode.removeChild(emptyMessage);
+    // 시간 형식을 "YYYY-MM-DD HH:MM" 형태로 변환하는 함수
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${year}-${month}-${day} ${hours}:${minutes}`;
     }
-
-    routes.forEach((route) => {
-      const li = document.createElement('li');
-      const a = document.createElement('a');
-      const h2 = document.createElement('h2');
-      const p = document.createElement('p');
-
-      h2.textContent = `${route.userName}'s Route`;
-      p.textContent = `Start: (${route.startLocation.latitude}, ${route.startLocation.longitude}), `
-                    + `End: (${route.endLocation.latitude}, ${route.endLocation.longitude})`;
-
-      a.href = '#';
-      a.appendChild(h2);
-      a.appendChild(p);
-      li.appendChild(a);
-      routeListContainer.appendChild(li);
-    });
-  }
 
   loadRoutes();
 }
