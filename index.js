@@ -12,8 +12,15 @@ $('.message a').click(function(e){
     });
 });
 
-//const BASE_URL = 'http://localhost:8080';
-const BASE_URL = '/api'
+let BASE_URL;
+
+fetch('./config.json')
+  .then(response => response.json())
+  .then(config => {
+    BASE_URL = config.BASE_URL;
+    console.log(BASE_URL);
+  })
+  .catch(error => console.error('Failed to load configuration:', error));
 
 document.addEventListener('DOMContentLoaded', function() {
     // 로딩 화면 처리

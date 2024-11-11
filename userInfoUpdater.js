@@ -1,7 +1,18 @@
-// userInfoUpdater.js
 (() => {
-    //const BASE_URL = 'http://localhost:8080';
-    const BASE_URL = '/api'
+    let BASE_URL;
+
+    // 설정 파일을 먼저 로드한 후 userInfo 업데이트를 시작
+    fetch('/config.json')
+        .then(response => response.json())
+        .then(config => {
+            BASE_URL = config.BASE_URL;
+            console.log('BASE_URL loaded:', BASE_URL);
+
+            // 설정 파일이 로드된 후 updateUserInfo 호출
+            updateUserInfo();
+            setInterval(updateUserInfo, 5000);
+        })
+        .catch(error => console.error('Failed to load configuration:', error));
 
     function getStoredUserInfo() {
         const userInfoString = sessionStorage.getItem("userInfo");
@@ -9,6 +20,12 @@
     }
 
     async function updateUserInfo() {
+        // BASE_URL이 설정되지 않았을 경우를 확인
+        if (!BASE_URL) {
+            console.error("BASE_URL이 설정되지 않았습니다.");
+            return;
+        }
+
         const userInfo = getStoredUserInfo();
         if (!userInfo) {
             console.error("sessionStorage에 userInfo가 없습니다.");
@@ -62,8 +79,4 @@
             window.location.href = '../home/home.html';
         });
     }
-
-    // 첫 실행
-    updateUserInfo();
-    setInterval(updateUserInfo, 5000);
 })();

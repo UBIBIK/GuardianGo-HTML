@@ -1,6 +1,18 @@
+
 (() => {
-    const BASE_URL = '/api';
+    let BASE_URL;
     const UPDATE_INTERVAL = 5000;
+
+    fetch('/config.json')
+        .then(response => response.json())
+        .then(config => {
+            BASE_URL = config.BASE_URL;
+            console.log('BASE_URL loaded:', BASE_URL);
+
+            // 설정 파일을 로드한 후 위치 업데이트 시작
+            setInterval(getLocationFromDevice, UPDATE_INTERVAL);
+        })
+        .catch(error => console.error('Failed to load configuration:', error));
 
     async function sendLocationToServer(latitude, longitude) {
         try {
@@ -72,6 +84,4 @@
         sendLocationToServer(latitude, longitude);
     };
 
-    // 주기적으로 위치 업데이트 요청
-    setInterval(getLocationFromDevice, UPDATE_INTERVAL);
 })();
