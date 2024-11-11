@@ -23,7 +23,10 @@
                 throw new Error('위치 정보를 서버에 전송하는 중 오류 발생');
             }
 
+            const groupInfo = await response.json();
+            sessionStorage.setItem('groupInfo', JSON.stringify(groupInfo));
             console.log('위치 정보가 서버에 성공적으로 전송되었습니다.');
+
         } catch (error) {
             console.error('위치 전송 오류:', error);
         }

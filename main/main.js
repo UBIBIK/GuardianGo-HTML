@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 if (index === 0) {
                     window.location.href = '../home/home.html';
+                } else if (index === 1) {
+                    window.location.href = '../list/list.html';
                 } else if (index === 2) {
                     window.location.href = '../group/group.html';
                 } else if (index === 3) {
