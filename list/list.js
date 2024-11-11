@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const BASE_URL = '/api';
+    const BASE_URL = '/api'
     const routeListContainer = document.querySelector('.route-list');
   
     // 로딩 스피너와 빈 리스트 메시지 생성
