@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.transition = 'opacity 0.5s ease';
     
     setTimeout(() => {
-      window.location.href = 'index.html';
+      window.location.href = '../index.html';
     }, 500);
   });
 
