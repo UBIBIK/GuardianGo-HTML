@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const buttons = document.querySelectorAll('.grid-button');
+    let titleClickCount = 0;
 
     buttons.forEach((button, index) => {
         button.addEventListener('click', (event) => {
@@ -43,10 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const title = document.querySelector('.project-title');
     // 이스터에그
-    title.addEventListener('mousedown', () => {
-        pressTimer = setTimeout(() => {
+    title.addEventListener('click', () => {
+        titleClickCount++;
+        if (titleClickCount >= 10) {
             window.location.href = '../game/game.html';
-        }, 5000); // 5초 동안 누를 때 이동
+        }
     });
     title.addEventListener('mouseenter', () => {
         title.style.transform = 'scale(1.1)';
