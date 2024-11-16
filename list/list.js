@@ -170,6 +170,17 @@ function openRoutePreview(route) {
     map.setCenter({ lat: route.startLocation.latitude, lng: route.startLocation.longitude });
   }
 
+  // 기존 경로 및 마커 제거
+  if (routePath) {
+    routePath.setMap(null);
+  }
+  if (startMarker) {
+    startMarker.setMap(null);
+  }
+  if (endMarker) {
+    endMarker.setMap(null);
+  }
+
   // 경로 표시
   const pathCoordinates = [
     { lat: route.startLocation.latitude, lng: route.startLocation.longitude },
@@ -191,34 +202,34 @@ function openRoutePreview(route) {
   routePath.setMap(map);
 
   // 출발지 마커 추가
-  new google.maps.Marker({
-    position: { lat: route.startLocation.latitude, lng: route.startLocation.longitude },
-    map: map,
-    icon: {
-      path: google.maps.SymbolPath.CIRCLE,
-      scale: 8,                     // 마커 크기 조절
-      fillColor: "#DB4455",         // 원의 색상
-      fillOpacity: 1.0,
-      strokeWeight: 1,              // 테두리 두께
-      strokeColor: "#333"           // 테두리 색상
-    },
-    title: "출발지"
-  });
+new google.maps.Marker({
+  position: { lat: route.startLocation.latitude, lng: route.startLocation.longitude },
+  map: map,
+  icon: {
+    path: google.maps.SymbolPath.CIRCLE,
+    scale: 10,                    // 마커 크기를 좀 더 크게
+    fillColor: "#4CAF50",        // 초록색 계열
+    fillOpacity: 0.9,            // 약간의 투명도
+    strokeWeight: 2,             // 테두리 두께 증가
+    strokeColor: "#388E3C",      // 더 진한 초록색으로 테두리
+  },
+  title: "출발지"
+});
 
-  // 목적지 마커 추가
-  new google.maps.Marker({
-    position: { lat: route.endLocation.latitude, lng: route.endLocation.longitude },
-    map: map,
-    icon: {
-      path: google.maps.SymbolPath.CIRCLE,
-      scale: 8,
-      fillColor: "#DB4455",         // 원의 색상 (빨간색)
-      fillOpacity: 1.0,
-      strokeWeight: 1,
-      strokeColor: "#333"
-    },
-    title: "목적지"
-  });
+// 목적지 마커 추가
+new google.maps.Marker({
+  position: { lat: route.endLocation.latitude, lng: route.endLocation.longitude },
+  map: map,
+  icon: {
+    path: google.maps.SymbolPath.CIRCLE,
+    scale: 10,
+    fillColor: "#F44336",        // 세련된 빨간색
+    fillOpacity: 0.9,
+    strokeWeight: 2,
+    strokeColor: "#D32F2F",      // 더 진한 빨간색으로 테두리
+  },
+  title: "목적지"
+});
 }
 
 // 경로 사용 버튼 클릭 이벤트
