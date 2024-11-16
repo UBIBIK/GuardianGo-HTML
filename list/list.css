@@ -13,16 +13,27 @@
   
   /* 헤더 스타일 */
   header {
-    background-color: #4CAF50;
-    padding: 20px;
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    padding: 25px;
     text-align: center;
     color: white;
-    animation: fadeIn 0.5s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    animation: fadeInDown 0.8s ease;
   }
   
-  header h1 {
-    font-size: 24px;
-    font-weight: bold;
+  /* 새로운 헤더 애니메이션 추가 */
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   
   /* 헤더 페이드인 효과 */
@@ -36,11 +47,19 @@
   }
   
   /* 메인 컨테이너 */
-  .route-list-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 40px;
-    animation: slideUp 0.7s ease;
+  .route-list li {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 24px;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+  }
+  
+  .route-list li:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 8px 24px rgba(76, 175, 80, 0.15);
   }
   
   /* 리스트 슬라이드업 애니메이션 */
@@ -56,25 +75,39 @@
   }
   
   /* 경로 리스트 */
-  .route-list {
-    list-style-type: none;
-    width: 80%;
-    max-width: 800px;
-    padding: 0;
+  .route-list li a {
+    display: block;
+    padding: 24px;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    background: linear-gradient(to right, transparent 50%, rgba(76, 175, 80, 0.05) 50%);
+    background-size: 200% 100%;
+    transition: background-position 0.4s ease;
   }
   
-  /* 리스트 항목 스타일 */
-  .route-list li {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  .route-list li a:hover {
+    background-position: -100% 0;
   }
   
-  .route-list li:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  .route-list li h2 {
+    font-size: 20px;
+    margin-bottom: 12px;
+    color: #2e7d32;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .route-list li h2::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: #4CAF50;
+    border-radius: 50%;
+    margin-right: 8px;
   }
   
   /* 경로 링크 스타일 */
@@ -148,3 +181,103 @@
     background-color: #f44336; /* 오류 시 빨간색 */
   }
   
+  /* 모달 스타일 */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 32px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 700px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transform: scale(0.9);
+  opacity: 0;
+  animation: modalOpen 0.5s forwards;
+}
+
+@keyframes modalOpen {
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* 경로 사용 버튼 스타일 */
+.use-route-button {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  margin-top: 24px;
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.use-route-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(76, 175, 80, 0.2);
+}
+
+.use-route-button:active {
+  transform: translateY(0);
+}
+
+
+/* 그룹원 선택 모달 스타일 */
+.member-list {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.member-list li {
+  padding: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.member-list li:hover {
+  background-color: rgba(76, 175, 80, 0.08);
+  padding-left: 24px;
+}
+
+/* 지도 컨테이너 */
+#map {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
