@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>환경설정</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="setting.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-content">
+        <i class="fas fa-cog fa-spin"></i>
+        <h1>환경설정</h1>
+      </div>
+      <p class="subtitle">계정 설정을 관리하세요</p>
+    </header>
+
+    <div class="settings-container">
+      <button id="editProfileButton" class="settings-button">
+        <i class="fas fa-user-edit"></i>
+        <span>사용자 정보 수정</span>
+        <i class="fas fa-chevron-right arrow"></i>
+      </button>
+      
+      <button id="reportHistoryButton" class="settings-button">
+        <i class="fas fa-history"></i>
+        <span>신고 내역 관리</span>
+        <i class="fas fa-chevron-right arrow"></i>
+      </button>
+      
+      <button id="logoutButton" class="settings-button logout">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>로그아웃</span>
+      </button>
+    </div>
+  </div>
+  
+  <div class="modal">
+    <div class="modal-content">
+      <h2>로그아웃</h2>
+      <p>정말 로그아웃 하시겠습니까?</p>
+      <div class="modal-buttons">
+        <button id="confirmLogout">확인</button>
+        <button id="cancelLogout">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="setting.js"></script>
+</body>
+</html>

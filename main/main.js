@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.location.href = '../report/selectlocation.html';
                 } else if (index === 4) { // 긴급호출 버튼
                     activateEmergency();
+                } else if (index === 5) {
+                    window.location.href = '../setting/setting.html';
                 }
             }, 50);
         });
