@@ -181,12 +181,6 @@ function openRoutePreview(route) {
   if (routePath) {
     routePath.setMap(null);
   }
-  if (startMarker) {
-    startMarker.setMap(null);
-  }
-  if (endMarker) {
-    endMarker.setMap(null);
-  }
   routePath = new google.maps.Polyline({
     path: pathCoordinates,
     geodesic: true,
