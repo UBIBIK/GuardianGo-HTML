@@ -2,6 +2,8 @@ let BASE_URL;
 let routes = [];  // 전역 변수로 routes 선언
 let map;
 let routePath;
+let startMarker = null;
+let endMarker = null;
 
 // config.json 파일을 먼저 로드한 후 BASE_URL을 설정하고 fetchRoutes를 호출
 fetch('../config.json')
@@ -170,17 +172,25 @@ function openRoutePreview(route) {
     map.setCenter({ lat: route.startLocation.latitude, lng: route.startLocation.longitude });
   }
 
+  // 기존 경로 제거 후 새 경로 표시
+  if (routePath) {
+    routePath.setMap(null);
+  }
+  if (startMarker) {
+    startMarker.setMap(null);
+  }
+  if (endMarker) {
+    endMarker.setMap(null);
+  }
+
   // 경로 표시
   const pathCoordinates = [
     { lat: route.startLocation.latitude, lng: route.startLocation.longitude },
     ...route.waypoints.map(waypoint => ({ lat: waypoint.latitude, lng: waypoint.longitude })),
     { lat: route.endLocation.latitude, lng: route.endLocation.longitude }
   ];
-
-  // 기존 경로 제거 후 새 경로 표시
-  if (routePath) {
-    routePath.setMap(null);
-  }
+  
+  // 새 경로 생성 및 추가
   routePath = new google.maps.Polyline({
     path: pathCoordinates,
     geodesic: true,
@@ -190,29 +200,29 @@ function openRoutePreview(route) {
   });
   routePath.setMap(map);
 
-  // 출발지 마커 추가
-  new google.maps.Marker({
+  // 새 출발지 마커 추가
+  startMarker = new google.maps.Marker({
     position: { lat: route.startLocation.latitude, lng: route.startLocation.longitude },
     map: map,
     icon: {
       path: google.maps.SymbolPath.CIRCLE,
-      scale: 8,                     // 마커 크기 조절
-      fillColor: "#DB4455",         // 원의 색상
+      scale: 8,
+      fillColor: "#DB4455",
       fillOpacity: 1.0,
-      strokeWeight: 1,              // 테두리 두께
-      strokeColor: "#333"           // 테두리 색상
+      strokeWeight: 1,
+      strokeColor: "#333"
     },
     title: "출발지"
   });
 
-  // 목적지 마커 추가
-  new google.maps.Marker({
+  // 새 목적지 마커 추가
+  endMarker = new google.maps.Marker({
     position: { lat: route.endLocation.latitude, lng: route.endLocation.longitude },
     map: map,
     icon: {
       path: google.maps.SymbolPath.CIRCLE,
       scale: 8,
-      fillColor: "#DB4455",         // 원의 색상 (빨간색)
+      fillColor: "#DB4455",
       fillOpacity: 1.0,
       strokeWeight: 1,
       strokeColor: "#333"
