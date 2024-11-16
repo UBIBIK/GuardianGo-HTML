@@ -131,31 +131,45 @@ let currentPiece = { position: { x: 0, y: 0 }, matrix: null, type: 0 };
 resetPiece();
 update();
 
-document.addEventListener("keydown", (event) => {
+// 키보드 이동
+document.addEventListener("keydown", handleKeyPress);
+
+// 모바일 버튼 이벤트 연결
+document.getElementById("left").addEventListener("click", () => movePiece(-1));
+document.getElementById("right").addEventListener("click", () => movePiece(1));
+document.getElementById("rotate").addEventListener("click", rotatePiece);
+document.getElementById("down").addEventListener("click", playerDrop);
+
+function handleKeyPress(event) {
   if (event.key === "ArrowLeft") {
-    currentPiece.position.x--;
-    if (collide(board, currentPiece)) {
-      currentPiece.position.x++;
-    }
+    movePiece(-1);
   } else if (event.key === "ArrowRight") {
-    currentPiece.position.x++;
-    if (collide(board, currentPiece)) {
-      currentPiece.position.x--;
-    }
+    movePiece(1);
   } else if (event.key === "ArrowDown") {
     playerDrop();
   } else if (event.key === "ArrowUp") {
-    const rotatedMatrix = rotate(currentPiece.matrix);
-    const pos = currentPiece.position.x;
-    let offset = 1;
-    while (collide(board, { ...currentPiece, matrix: rotatedMatrix })) {
-      currentPiece.position.x += offset;
-      offset = -(offset + (offset > 0 ? 1 : -1));
-      if (offset > currentPiece.matrix[0].length) {
-        currentPiece.position.x = pos;
-        return;
-      }
-    }
-    currentPiece.matrix = rotatedMatrix;
+    rotatePiece();
   }
-});
+}
+
+function movePiece(direction) {
+  currentPiece.position.x += direction;
+  if (collide(board, currentPiece)) {
+    currentPiece.position.x -= direction;
+  }
+}
+
+function rotatePiece() {
+  const rotatedMatrix = rotate(currentPiece.matrix);
+  const pos = currentPiece.position.x;
+  let offset = 1;
+  while (collide(board, { ...currentPiece, matrix: rotatedMatrix })) {
+    currentPiece.position.x += offset;
+    offset = -(offset + (offset > 0 ? 1 : -1));
+    if (offset > currentPiece.matrix[0].length) {
+      currentPiece.position.x = pos;
+      return;
+    }
+  }
+  currentPiece.matrix = rotatedMatrix;
+}
