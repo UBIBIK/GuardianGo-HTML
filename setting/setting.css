@@ -19,18 +19,20 @@ body {
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; /* 변경: center에서 flex-start로 */
+  padding-top: 2rem; /* 추가: 상단 여백 */
 }
 
 .container {
   width: 100%;
   max-width: 480px;
   padding: 2rem;
+  margin-top: 2vh; /* 추가: 상단 여백을 뷰포트 높이의 2%로 설정 */
 }
 
 header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem; /* 수정: 3rem에서 2rem으로 줄임 */
 }
 
 .header-content {
@@ -55,8 +57,10 @@ h1 {
 .subtitle {
   color: #666;
   font-size: 1rem;
+  margin-bottom: 1rem; /* 추가: 부제목 아래 여백 */
 }
 
+/* 나머지 CSS 코드는 동일하게 유지 */
 .settings-container {
   display: flex;
   flex-direction: column;
@@ -229,4 +233,19 @@ h1 {
 
 .settings-button:nth-child(3) {
   animation-delay: 0.3s;
+}
+
+/* 반응형 조정 추가 */
+@media (max-height: 600px) {
+  body {
+    padding-top: 1rem;
+  }
+  
+  .container {
+    margin-top: 0;
+  }
+  
+  header {
+    margin-bottom: 1.5rem;
+  }
 }
