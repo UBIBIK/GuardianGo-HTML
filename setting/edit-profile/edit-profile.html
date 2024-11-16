@@ -1,0 +1,55 @@
+<!-- 새로 만드는 파일: edit-profile.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>사용자 정보</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="edit-profile.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <button id="backButton" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <div class="header-content">
+        <i class="fas fa-user-circle"></i>
+        <h1>사용자 정보</h1>
+      </div>
+    </header>
+
+    <div class="profile-container">
+      <div class="profile-card">
+        <div class="profile-avatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="profile-info">
+          <div class="info-group">
+            <label>이름</label>
+            <p id="userName" class="info-value"></p>
+          </div>
+          <div class="info-group">
+            <label>이메일</label>
+            <p id="userEmail" class="info-value"></p>
+          </div>
+          <div class="info-group">
+            <label>전화번호</label>
+            <p id="phoneNumber" class="info-value"></p>
+          </div>
+          <div class="info-group">
+            <label>그룹 키</label>
+            <p id="groupKey" class="info-value"></p>
+          </div>
+          <div class="info-group">
+            <label>상태</label>
+            <p id="status" class="info-value"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="edit-profile.js"></script>
+</body>
+</html>

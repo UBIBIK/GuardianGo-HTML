@@ -43,8 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('editProfileButton').addEventListener('click', (e) => {
     createRipple(e);
     setTimeout(() => {
-      window.location.href = 'edit-profile.html';
-    }, 300);
+      window.location.href = './edit-profile/edit-profile.html';
+    }, 30);
   });
 
   // 신고 내역 관리 버튼
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     createRipple(e);
     setTimeout(() => {
       window.location.href = 'report-history.html';
-    }, 300);
+    }, 30);
   });
 
   // 로그아웃 모달 표시
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     createRipple(e);
     setTimeout(() => {
       modal.classList.add('active');
-    }, 300);
+    }, 30);
   });
 
   // 로그아웃 확인
