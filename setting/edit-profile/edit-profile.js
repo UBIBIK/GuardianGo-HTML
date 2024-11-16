@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.style.transition = 'opacity 0.3s ease';
       
       setTimeout(() => {
-        window.location.href = 'setting.html';
+        window.location.href = '../setting.html';
       }, 300);
     });
   
