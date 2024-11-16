@@ -42,6 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const title = document.querySelector('.project-title');
+    // 이스터에그
+    title.addEventListener('mousedown', () => {
+        pressTimer = setTimeout(() => {
+            window.location.href = '../game/game.html';
+        }, 5000); // 5초 동안 누를 때 이동
+    });
     title.addEventListener('mouseenter', () => {
         title.style.transform = 'scale(1.1)';
     });
