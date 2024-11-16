@@ -170,17 +170,6 @@ function openRoutePreview(route) {
     map.setCenter({ lat: route.startLocation.latitude, lng: route.startLocation.longitude });
   }
 
-  // 기존 경로 및 마커 제거
-  if (routePath) {
-    routePath.setMap(null);
-  }
-  if (startMarker) {
-    startMarker.setMap(null);
-  }
-  if (endMarker) {
-    endMarker.setMap(null);
-  }
-
   // 경로 표시
   const pathCoordinates = [
     { lat: route.startLocation.latitude, lng: route.startLocation.longitude },
@@ -191,6 +180,12 @@ function openRoutePreview(route) {
   // 기존 경로 제거 후 새 경로 표시
   if (routePath) {
     routePath.setMap(null);
+  }
+  if (startMarker) {
+    startMarker.setMap(null);
+  }
+  if (endMarker) {
+    endMarker.setMap(null);
   }
   routePath = new google.maps.Polyline({
     path: pathCoordinates,
