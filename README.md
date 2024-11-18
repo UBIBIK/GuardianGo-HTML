@@ -26,16 +26,16 @@ https://mokpo-safety.netlify.app/
 
 ### 1. Back-end
 
-> Flask
-> Google Cloud Platform
-> Spring Boot
-> Firebase
+  > Flask  
+  > Google Cloud Platform  
+  > Spring Boot  
+  > Firebase  
 
 ### 2. Front-end
 
-> Node.js
-> JavaScript 및 HTML/CSS
-> geoJSON
-> Google Maps API
+  > Node.js  
+  > JavaScript 및 HTML/CSS  
+  > geoJSON  
+  > Google Maps API  
 
 <br />
