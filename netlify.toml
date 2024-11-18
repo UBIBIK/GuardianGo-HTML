@@ -9,8 +9,3 @@
   from = "/api/calculate_route"
   to = "/.netlify/functions/calculate_route"
   status = 200
-
-[[redirects]]
-  from = "/api/getWeather"
-  to = "/.netlify/functions/getWeather"
-  status = 200
