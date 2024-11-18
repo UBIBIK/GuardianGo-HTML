@@ -1,9 +1,11 @@
 let BASE_URL;
+let WEATHER_API_KEY; // 날씨 API 키
 
 fetch('../config.json')
   .then(response => response.json())
   .then(config => {
     BASE_URL = config.BASE_URL;
+    WEATHER_API_KEY = config.WEATHER_API_KEY; // 날씨 API 키
     console.log(BASE_URL);
   })
   .catch(error => console.error('Failed to load configuration:', error));
@@ -437,5 +439,149 @@ function updateUserInfoInSession() {
     userInfo.route = null; // route 정보를 null로 설정
     sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
 }
+
+// 격자 좌표 변환 함수
+function toGridCoordinates(lat, lon) {
+    const RE = 6371.00877; // 지구 반경(km)
+    const GRID = 5.0; // 격자 간격(km)
+    const SLAT1 = 30.0;
+    const SLAT2 = 60.0;
+    const OLON = 126.0; // 기준점의 경도
+    const OLAT = 38.0; // 기준점의 위도
+    const XO = 43;
+    const YO = 136;
+
+    const DEGRAD = Math.PI / 180.0;
+    const RADDEG = 180.0 / Math.PI;
+
+    const re = RE / GRID;
+    const slat1 = SLAT1 * DEGRAD;
+    const slat2 = SLAT2 * DEGRAD;
+    const olon = OLON * DEGRAD;
+    const olat = OLAT * DEGRAD;
+
+    let sn = Math.tan(Math.PI * 0.25 + slat2 * 0.5) / Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+    sn = Math.log(Math.cos(slat1) / Math.cos(slat2)) / Math.log(sn);
+    let sf = Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+    sf = (Math.pow(sf, sn) * Math.cos(slat1)) / sn;
+    let ro = Math.tan(Math.PI * 0.25 + olat * 0.5);
+    ro = (re * sf) / Math.pow(ro, sn);
+    const rs = {};
+
+    let ra = Math.tan(Math.PI * 0.25 + lat * DEGRAD * 0.5);
+    ra = (re * sf) / Math.pow(ra, sn);
+    let theta = lon * DEGRAD - olon;
+    if (theta > Math.PI) theta -= 2.0 * Math.PI;
+    if (theta < -Math.PI) theta += 2.0 * Math.PI;
+    theta *= sn;
+    rs['nx'] = Math.floor(ra * Math.sin(theta) + XO + 0.5);
+    rs['ny'] = Math.floor(ro - ra * Math.cos(theta) + YO + 0.5);
+    return rs;
+}
+
+// 기상청 API 요청을 위한 날짜 및 시각 설정 함수
+function getBaseDateTime() {
+    const now = new Date();
+
+    // 현재 날짜 (YYYYMMDD 형식)
+    const baseDate = now.toISOString().slice(0, 10).replace(/-/g, ''); // 예: 20231118
+
+    // 현재 시간을 기준으로 가장 가까운 baseTime 설정
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+
+    let baseTime;
+    if (hours >= 23 || (hours === 0 && minutes < 10)) {
+        baseTime = '2300';
+    } else if (hours >= 20 || (hours === 21 && minutes < 10)) {
+        baseTime = '2000';
+    } else if (hours >= 17 || (hours === 18 && minutes < 10)) {
+        baseTime = '1700';
+    } else if (hours >= 14 || (hours === 15 && minutes < 10)) {
+        baseTime = '1400';
+    } else if (hours >= 11 || (hours === 12 && minutes < 10)) {
+        baseTime = '1100';
+    } else if (hours >= 8 || (hours === 9 && minutes < 10)) {
+        baseTime = '0800';
+    } else if (hours >= 5 || (hours === 6 && minutes < 10)) {
+        baseTime = '0500';
+    } else {
+        baseTime = '0200';
+    }
+
+    return { baseDate, baseTime };
+}
+
+// 날씨 정보 가져오기
+function loadWeather() {
+    const weatherInfo = document.getElementById('weatherInfo');
+    const weatherDescription = document.getElementById('weatherDescription');
+    const temperature = document.getElementById('temperature');
+
+    // sessionStorage에서 위치 정보 가져오기
+    const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+    const { locationInfo } = userInfo || {}; // userInfo가 없을 경우 안전하게 처리
+
+    if (locationInfo && locationInfo.latitude && locationInfo.longitude) {
+        const { latitude, longitude } = locationInfo;
+        
+        // 위경도를 기상청 격자 좌표로 변환
+        const { nx, ny } = toGridCoordinates(latitude, longitude);
+        const today = new Date();
+        const { baseDate, baseTime } = getBaseDateTime();
+        console.log(`Base Date: ${baseDate}, Base Time: ${baseTime}`);
+
+        // 날씨 API 요청
+        fetch(`http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey=${WEATHER_API_KEY}&numOfRows=10&pageNo=1&dataType=JSON&base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`)
+            .then(response => response.text()) // 텍스트로 응답을 먼저 확인
+            .then(text => {
+                console.log("API Response:", text); // 응답 내용을 콘솔에 출력
+                return JSON.parse(text); // JSON으로 변환
+            })
+            .then(data => {
+                if (data.response && data.response.body && data.response.body.items) {
+                    const items = data.response.body.items.item;
+                    const temperatureData = items.find(item => item.category === "T1H");
+                    const weatherData = items.find(item => item.category === "PTY");
+
+                    if (temperatureData) {
+                        temperature.textContent = `온도: ${temperatureData.obsrValue}°C`;
+                    }
+                    if (weatherData) {
+                        const weatherDescriptionMap = {
+                            '0': '맑음',
+                            '1': '비',
+                            '2': '비/눈',
+                            '3': '눈',
+                            '5': '빗방울',
+                            '6': '빗방울눈날림',
+                            '7': '눈날림'
+                        };
+                        weatherDescription.textContent = `날씨: ${weatherDescriptionMap[weatherData.obsrValue]}`;
+                    }
+
+                    // 애니메이션 효과 추가
+                    weatherInfo.classList.remove('hidden');
+                    weatherInfo.classList.add('show');
+                } else {
+                    console.error("No weather data found");
+                }
+            })
+            .catch(error => console.error("Error fetching weather data:", error));
+    } else {
+        console.error("Location information not available in userInfo.");
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    // userInfo에 locationInfo가 설정될 때까지 기다림
+    const checkLocationInfoInterval = setInterval(() => {
+        const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+        if (userInfo && userInfo.locationInfo) {
+            clearInterval(checkLocationInfoInterval); // 위치 정보가 설정되면 반복 종료
+            loadWeather(); // 위치 정보가 준비되면 loadWeather 호출
+        }
+    }, 1000); // 1초마다 확인
+});
 
 window.onload = initMap;

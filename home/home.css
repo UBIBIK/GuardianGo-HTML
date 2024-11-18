@@ -342,3 +342,70 @@ body, html {
     border-radius: 4px;
     cursor: pointer;
 }
+
+/* 날씨 정보 위치 수정 */
+.weather-info {
+    position: absolute;
+    top:60px;
+    left: 10px; /* 오른쪽에서 왼쪽으로 변경 */
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    text-align: center;
+    font-size: 1.1em;
+    color: #333;
+    transition: all 0.5s ease;
+    z-index: 1000;
+}
+
+/* 날씨별 맵 스타일 */
+.weather-sunny {
+    filter: brightness(1.1) saturate(1.2);
+}
+
+.weather-rainy {
+    filter: brightness(0.9) saturate(0.8);
+}
+
+.weather-snowy {
+    filter: brightness(1.1) saturate(0.7);
+}
+
+/* 애니메이션 정의 */
+@keyframes rainFall {
+    0% {
+        transform: translateY(-100vh) skewX(-15deg);
+    }
+    100% {
+        transform: translateY(100vh) skewX(-15deg);
+    }
+}
+
+@keyframes snowFall {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+    }
+}
+
+/* 날씨 정보 강화된 스타일 */
+.weather-info p {
+    margin: 5px 0;
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+.weather-info.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* 날씨 아이콘 스타일 */
+.weather-icon {
+    font-size: 1.5em;
+    margin-bottom: 8px;
+}

@@ -10,6 +10,7 @@
             console.log('BASE_URL loaded:', BASE_URL);
 
             // 설정 파일을 로드한 후 위치 업데이트 시작
+            getLocationFromDevice(); // 첫 번째 위치 업데이트를 즉시 실행
             setInterval(getLocationFromDevice, UPDATE_INTERVAL);
         })
         .catch(error => console.error('Failed to load configuration:', error));
@@ -34,6 +35,10 @@
             if (!response.ok) {
                 throw new Error('위치 정보를 서버에 전송하는 중 오류 발생');
             }
+
+            // sessionStorage에 userInfo 업데이트
+            sessionStorage.setItem('userInfo', JSON.stringify(updatedUserInfo)); // 이 부분 추가
+            console.log('위치 정보가 sessionStorage에 성공적으로 업데이트되었습니다.');
 
             const groupInfo = await response.json();
             sessionStorage.setItem('groupInfo', JSON.stringify(groupInfo));
