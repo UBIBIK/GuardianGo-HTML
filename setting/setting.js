@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('reportHistoryButton').addEventListener('click', (e) => {
     createRipple(e);
     setTimeout(() => {
-      window.location.href = 'report-history.html';
+      window.location.href = './report-history/report-history.html';
     }, 30);
   });
 

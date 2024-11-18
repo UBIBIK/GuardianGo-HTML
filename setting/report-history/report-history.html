@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>신고 내역 관리</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="report-history.css">
+</head>
+<body>
+  <div class="container">
+    <header class="page-header">
+      <div class="header-content">
+        <h1><i class="fas fa-clipboard-list"></i> 신고 내역 관리</h1>
+        <p class="subtitle">내 신고 기록을 확인하고 관리하세요</p>
+      </div>
+      <div class="header-stats">
+        <div class="stat-item">
+          <span class="stat-number" id="totalReports">0</span>
+          <span class="stat-label">전체 신고</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="monthReports">0</span>
+          <span class="stat-label">이번 달</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="신고 내용 검색...">
+      <i class="fas fa-search search-icon"></i>
+    </div>
+
+    <div class="reports-container">
+      <div class="report-list" id="reportList">
+        <!-- 신고 내역이 동적으로 추가됨 -->
+      </div>
+      <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner"></div>
+      </div>
+      <div class="no-reports" id="noReports">
+        <i class="fas fa-folder-open"></i>
+        <p>신고 내역이 없습니다</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 상세 보기 모달 -->
+  <div class="modal" id="reportDetailModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>신고 상세 내용</h2>
+        <button id="closeModalBtn" class="close-btn">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="image-container">
+          <img id="modalImage" src="" alt="신고 이미지">
+          <div class="image-controls">
+            <button class="zoom-btn" id="zoomIn">
+              <i class="fas fa-search-plus"></i>
+            </button>
+            <button class="zoom-btn" id="zoomOut">
+              <i class="fas fa-search-minus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="report-details">
+          <div class="detail-item">
+            <i class="fas fa-calendar"></i>
+            <span id="reportDate"></span>
+          </div>
+          <div class="detail-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span id="reportLocation"></span>
+          </div>
+          <div class="memo-container">
+            <h3>신고 내용</h3>
+            <p id="modalMemo"></p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="deleteReportBtn" class="delete-btn">
+          <i class="fas fa-trash-alt"></i> 삭제
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="report-history.js"></script>
+</body>
+</html>
