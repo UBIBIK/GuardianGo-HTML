@@ -529,36 +529,41 @@ function loadWeather() {
 
         // Netlify Function을 통해 요청
         fetch(`/api/getWeather?nx=${nx}&ny=${ny}&baseDate=${baseDate}&baseTime=${baseTime}&serviceKey=${WEATHER_API_KEY}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.response && data.response.body && data.response.body.items) {
-                    const items = data.response.body.items.item;
-                    const temperatureData = items.find(item => item.category === "T1H");
-                    const weatherData = items.find(item => item.category === "PTY");
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.response && data.response.body && data.response.body.items) {
+                const items = data.response.body.items.item;
+                const temperatureData = items.find(item => item.category === "T1H");
+                const weatherData = items.find(item => item.category === "PTY");
 
-                    if (temperatureData) {
-                        temperature.textContent = `온도: ${temperatureData.obsrValue}°C`;
-                    }
-                    if (weatherData) {
-                        const weatherDescriptionMap = {
-                            '0': '맑음',
-                            '1': '비',
-                            '2': '비/눈',
-                            '3': '눈',
-                            '5': '빗방울',
-                            '6': '빗방울눈날림',
-                            '7': '눈날림'
-                        };
-                        weatherDescription.textContent = `날씨: ${weatherDescriptionMap[weatherData.obsrValue]}`;
-                    }
-
-                    weatherInfo.classList.remove('hidden');
-                    weatherInfo.classList.add('show');
-                } else {
-                    console.error("No weather data found");
+                if (temperatureData) {
+                    temperature.textContent = `온도: ${temperatureData.obsrValue}°C`;
                 }
-            })
-            .catch(error => console.error("Error fetching weather data:", error));
+                if (weatherData) {
+                    const weatherDescriptionMap = {
+                        '0': '맑음',
+                        '1': '비',
+                        '2': '비/눈',
+                        '3': '눈',
+                        '5': '빗방울',
+                        '6': '빗방울눈날림',
+                        '7': '눈날림'
+                    };
+                    weatherDescription.textContent = `날씨: ${weatherDescriptionMap[weatherData.obsrValue]}`;
+                }
+
+                weatherInfo.classList.remove('hidden');
+                weatherInfo.classList.add('show');
+            } else {
+                console.error("No weather data found");
+            }
+        })
+        .catch(error => console.error("Error fetching weather data:", error));
     } else {
         console.error("Location information not available in userInfo.");
     }
