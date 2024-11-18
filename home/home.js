@@ -518,26 +518,18 @@ function loadWeather() {
     const weatherDescription = document.getElementById('weatherDescription');
     const temperature = document.getElementById('temperature');
 
-    // sessionStorage에서 위치 정보 가져오기
     const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
-    const { locationInfo } = userInfo || {}; // userInfo가 없을 경우 안전하게 처리
+    const { locationInfo } = userInfo || {};
 
     if (locationInfo && locationInfo.latitude && locationInfo.longitude) {
         const { latitude, longitude } = locationInfo;
-        
-        // 위경도를 기상청 격자 좌표로 변환
         const { nx, ny } = toGridCoordinates(latitude, longitude);
         const today = new Date();
         const { baseDate, baseTime } = getBaseDateTime();
-        console.log(`Base Date: ${baseDate}, Base Time: ${baseTime}`);
 
-        // 날씨 API 요청
-        fetch(`http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey=${WEATHER_API_KEY}&numOfRows=10&pageNo=1&dataType=JSON&base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`)
-            .then(response => response.text()) // 텍스트로 응답을 먼저 확인
-            .then(text => {
-                console.log("API Response:", text); // 응답 내용을 콘솔에 출력
-                return JSON.parse(text); // JSON으로 변환
-            })
+        // Netlify Function을 통해 요청
+        fetch(`/netlify/functions/getWeather.js?nx=${nx}&ny=${ny}&baseDate=${baseDate}&baseTime=${baseTime}&serviceKey=${WEATHER_API_KEY}`)
+            .then(response => response.json())
             .then(data => {
                 if (data.response && data.response.body && data.response.body.items) {
                     const items = data.response.body.items.item;
@@ -560,7 +552,6 @@ function loadWeather() {
                         weatherDescription.textContent = `날씨: ${weatherDescriptionMap[weatherData.obsrValue]}`;
                     }
 
-                    // 애니메이션 효과 추가
                     weatherInfo.classList.remove('hidden');
                     weatherInfo.classList.add('show');
                 } else {
@@ -572,6 +563,7 @@ function loadWeather() {
         console.error("Location information not available in userInfo.");
     }
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
     // userInfo에 locationInfo가 설정될 때까지 기다림
