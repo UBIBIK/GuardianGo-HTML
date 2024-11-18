@@ -46,7 +46,7 @@ https://mokpo-safety.netlify.app/
 <details>
 <summary>Structure</summary>
 <div markdown="1" style="padding-left: 15px;">
-<img src="[https://user-images.githubusercontent.com/68724828/186079270-28793ba1-466e-421f-baf2-563b890c926f.png](https://github.com/UBIBIK/GuardianGo-HTML/blob/main/%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EA%B5%AC%EC%A1%B0%EB%8F%84.png)" />
+<img src="https://github.com/user-attachments/assets/fec94a8e-33a9-416a-8b8e-c660f196722f" />
 </div>
 </details>
 
