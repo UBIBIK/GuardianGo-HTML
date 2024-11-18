@@ -33,9 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${year}년 ${month}월 ${day}일 ${hours}:${minutes}`;
     }
 
-    // 위치 정보 포맷팅 함수
-    function formatLocation(lat, lng) {
-        return `위도: ${lat.toFixed(6)}, 경도: ${lng.toFixed(6)}`;
+    // 위치 정보 주소 변환
+    async function getAddressFromLatLng(lat, lng) {
+        const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=YOUR_GOOGLE_MAPS_API_KEY`);
+        if (!response.ok) throw new Error('Failed to fetch address');
+        
+        const data = await response.json();
+        return data.results[0]?.formatted_address || '주소 정보를 찾을 수 없습니다.';
     }
 
     // 토스트 메시지 표시 함수
@@ -133,12 +137,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 신고 상세 모달 열기
-    function openReportModal(report, imageUrl) {
+    async function openReportModal(report, imageUrl) {
         selectedReportId = report.uuid;
         modalImage.src = imageUrl;
         modalMemo.textContent = report.content;
         reportDate.textContent = formatDate(report.time);
-        reportLocation.textContent = formatLocation(report.latitude, report.longitude);
+        // Geocoding API로 주소 변환 후 표시
+        try {
+            const address = await getAddressFromLatLng(report.latitude, report.longitude);
+            reportLocation.textContent = address;
+        } catch (error) {
+            console.error('주소 변환 실패:', error);
+            reportLocation.textContent = '주소 정보를 찾을 수 없습니다.';
+        }
         modal.classList.add('show');
         currentZoom = 1;
         updateImageZoom();

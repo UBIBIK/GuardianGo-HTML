@@ -173,10 +173,11 @@
     margin: 0;
     line-height: 1.5;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 2; /* 웹킷 브라우저용 */
+    line-clamp: 2; /* 표준 속성으로 추가 */
     -webkit-box-orient: vertical;
     overflow: hidden;
-  }
+}
   
   /* Modal Styles */
   .modal {
