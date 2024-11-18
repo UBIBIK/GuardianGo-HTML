@@ -528,7 +528,7 @@ function loadWeather() {
         const { baseDate, baseTime } = getBaseDateTime();
 
         // Netlify Function을 통해 요청
-        fetch(`/netlify/functions/getWeather.js?nx=${nx}&ny=${ny}&baseDate=${baseDate}&baseTime=${baseTime}&serviceKey=${WEATHER_API_KEY}`)
+        fetch(`/netlify/functions/getWeather?nx=${nx}&ny=${ny}&baseDate=${baseDate}&baseTime=${baseTime}&serviceKey=${WEATHER_API_KEY}`)
             .then(response => response.json())
             .then(data => {
                 if (data.response && data.response.body && data.response.body.items) {
