@@ -52,6 +52,9 @@ https://mokpo-safety.netlify.app/
 
 <br />
 
+## 📄 프로젝트 설명 PDF
+- [프로젝트 설명 PDF 다운로드](https://github.com/UBIBIK/GuardianGo-HTML/blob/main/GuardianGo%20%EC%86%8C%EA%B0%9C.pdf)
+
 ## 🚀 Guardian Go - 핵심 기능
 
 1. **실시간 위치 공유**
