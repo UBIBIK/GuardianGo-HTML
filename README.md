@@ -63,7 +63,6 @@ https://mokpo-safety.netlify.app/
 
 2. **안전한 경로 추천**
    - 직접 개발한 안전지수를 활용하여 사용자가 안전하게 이동할 수 있는 최적의 경로를 제공.
-   - Mokpo 지역의 안전 지수를 기반으로 경로 내 위험 요소를 시각적으로 표시하여 주의를 유도.
    ![안전 경로 추천](https://github.com/UBIBIK/GuardianGo-HTML/blob/main/screenshots/%EC%95%88%EC%A0%84%EA%B2%BD%EB%A1%9C%20%EC%B6%94%EC%B2%9C.png)
 
 3. **사진 기반 안전 및 위험 요소 보고**
